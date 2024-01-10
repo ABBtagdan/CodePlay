@@ -1,6 +1,8 @@
 import barcode
 from flask import Flask, request, Response
 import time
+import os
+from werkzeug.utils import secure_filename
 
 PATH_TO_TEST_IMAGES_DIR = './images'
 
@@ -14,8 +16,12 @@ def index():
 @app.route('/image', methods=['POST'])
 def image():
 
-    i = request.files['image']  # get the image
-    print(i)
+    file = request.files['image']
+    print(file)
+    filename = secure_filename(file.filename)
+    file.save(filename)  # get the image
+    print(filename)
+    barcode.get_sequence_from_image(filename)
 
     return Response("%s saved")
 

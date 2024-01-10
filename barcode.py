@@ -3,11 +3,13 @@ from pyzbar.pyzbar import decode
 from pyzbar.pyzbar import ZBarSymbol
 import matplotlib.pyplot as plt
 import math
-import os
 
-def get_sequence_from_file_path(pic_path):
+def get_sequence_from_image(filepath):
+
     # preprocessing using opencv
-    im = cv2.imread(pic_path, cv2.IMREAD_GRAYSCALE)
+ # save file 
+    
+    im = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
     print(im)
     total = 0
     amount = 0
