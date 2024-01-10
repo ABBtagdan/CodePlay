@@ -156,13 +156,34 @@
     
             saveBtn.addEventListener('click', function () {
                 // Save the image locally
-                const dataURL = croppedImage.src;
-                const a = document.createElement('a');
-                a.href = dataURL;
-                a.download = 'cropped_image.png'; // You can customize the filename
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
+                const img = croppedImage;
+                
+                fetch(img.src)
+                .then(res => res.blob())
+                .then(blob => {
+                  const file = new File([blob], 'cropped_image.png', blob)
+                  console.log(file)
+
+                  var formData = new FormData();
+                  formData.append('image', file);
+          
+                  // You need to replace 'upload.php' with the actual server-side script URL
+                  fetch('http://10.22.5.103:5000/image', {
+                      method: 'POST',
+                      body: formData
+                  })
+                  .then(response => response.text())
+                  .then(data => {
+                      console.log('Server response:', data);
+                      alert('Image uploaded successfully!');
+                  })
+                  .catch(error => {
+                      console.error('Error:', error);
+                      alert('Error uploading image!');
+                  });
+
+                })
+
             });
     
             function cropImage(imageData, cropRect) {
