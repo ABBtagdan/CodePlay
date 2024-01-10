@@ -28,6 +28,8 @@ def get_sequence_from_image(filepath):
     if not barcodes:
         return "NO BARCODE FOUND"
 
+    d = ''
+
     for barcode in barcodes:
         if barcode.type not in ["EAN13", "EAN8"]:
             continue
