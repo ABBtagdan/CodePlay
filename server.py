@@ -21,7 +21,7 @@ def image():
 
     file = request.files['image']
     print(file)
-    filename = secure_filename("./temp/image_to_check.png")
+    filename = secure_filename("temp_image_to_check.png")
     file.save(filename)  # get the image
     print(filename)
     seq = barcode.get_sequence_from_image(filename)
