@@ -10,11 +10,8 @@ PATH_TO_TEST_IMAGES_DIR = './images'
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/')
-def index():
-    return Response(open('./Index.html').read(), mimetype="text/html")
 
-@app.route('/barcode')
+@app.route('/')
 def barcodeSite():
     return Response(open('./barcode.html').read(), mimetype="text/html")
 
