@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload</title>
+</head>
+<body>
+
+<h1>Image Upload</h1>
+
+<input type="file" accept="image/*" capture="camera" id="imageInput">
+<button onclick="uploadImage()">Upload Image</button>
+
+<script>
+    function uploadImage() {
+        var input = document.getElementById('imageInput');
+        var file = input.files[0];
+
+        if (file) {
+            var formData = new FormData();
+            formData.append('image', file);
+
+            // You need to replace 'upload.php' with the actual server-side script URL
+            fetch('http://10.22.5.103:5000/image', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {console.log(response); response.json()})
+            .then(data => {
+                console.log('Server response:', data);
+                alert('Image uploaded successfully!');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error uploading image!');
+            });
+        } else {
+            alert('Please select an image file.');
+        }
+    }
+</script>
+
+</body>
+</html>
