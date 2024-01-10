@@ -28,6 +28,7 @@
             width: 100%;
             max-width: 640px;
             border-radius: 8px;
+            transform: scaleX(-1); /* Invert vertically */
         }
 
         #overlay {
@@ -168,7 +169,7 @@
                   formData.append('image', file);
           
                   // You need to replace 'upload.php' with the actual server-side script URL
-                  fetch('http://10.22.5.103:5000/image', {
+                  fetch('http://localhost:5000/image', {
                       method: 'POST',
                       body: formData
                   })
