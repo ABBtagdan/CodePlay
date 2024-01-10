@@ -14,6 +14,10 @@ CORS(app)
 def index():
     return Response(open('./Index.html').read(), mimetype="text/html")
 
+@app.route('/barcode')
+def barcodeSite():
+    return Response(open('./barcode.html').read(), mimetype="text/html")
+
 # save the image as a picture
 @app.route('/image', methods=['POST'])
 def image():
