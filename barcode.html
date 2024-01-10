@@ -73,6 +73,13 @@
             text-align: center;
             font-size: 18px;
         }
+
+        /* Style for the output div */
+        #output {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -80,13 +87,16 @@
     <div id="container">
         <video id="preview" autoplay></video>
         <div id="overlay"></div>
-        <img id="croppedImage" style="display: none; width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+        <img id="croppedImage" style="display: none; width: 100%; height: 100%; object-fit: contain; border-radius: 8px; transform: scaleX(-1);"> <!-- Mirror the cropped image -->
     </div>
     <p id="instructions" style="color: #333;">Place your barcode inside the red rectangle and click on the 'Capture Image' button to capture the image.</p>
     <button id="captureBtn">Capture Image</button>
     <button id="retakeBtn">Retake Image</button>
     <button id="saveBtn">Save Image</button>
     <canvas id="canvas" style="display: none;"></canvas>
+
+    <!-- Output div to display messages -->
+    <div id="output"></div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -100,9 +110,10 @@
             const saveBtn = document.getElementById('saveBtn');
             const croppedImage = document.getElementById('croppedImage');
             const instructions = document.getElementById('instructions');
-    
+            const outputDiv = document.getElementById('output'); // Reference to the output div
+
             let stream; // To store the stream for reinitializing the camera
-    
+
             function initializeCamera() {
                 navigator.mediaDevices.getUserMedia({ video: true })
                     .then(function (newStream) {
@@ -113,19 +124,19 @@
                         console.error(err);
                     });
             }
-    
+
             initializeCamera(); // Initialize the camera on page load
-    
+
             captureBtn.addEventListener('click', function () {
                 // Pause the video to capture a still frame
                 video.pause();
-    
+
                 // Draw the current video frame onto the canvas
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    
+
                 // Get the image data from the canvas
                 const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    
+
                 // Calculate the position of the red rectangle relative to the video frame
                 const overlayRect = overlay.getBoundingClientRect();
                 const cropRect = {
@@ -134,81 +145,85 @@
                     width: overlayRect.width,
                     height: overlayRect.height
                 };
-    
+
                 // Crop the image to include the barcode region inside the centered red rectangle
                 const croppedImageData = cropImage(imageData, cropRect);
-    
+
                 // Display the cropped image
                 displayCroppedImage(croppedImageData);
-    
+
                 // Show the retake and save buttons, hide the capture button
                 captureBtn.style.display = 'none';
                 retakeBtn.style.display = 'block';
                 saveBtn.style.display = 'block';
-    
+
                 // Update instructions text
                 instructions.textContent = "Are you pleased with the image? If yes, click the 'Save Image' button. If not, then click the 'Retake Image' button.";
             });
-    
+
             retakeBtn.addEventListener('click', function () {
                 // Reload the page to reset the camera preview
                 location.reload();
             });
-    
+
             saveBtn.addEventListener('click', function () {
                 // Save the image locally
                 const img = croppedImage;
-                
+
                 fetch(img.src)
                 .then(res => res.blob())
                 .then(blob => {
-                  const file = new File([blob], 'cropped_image.png', blob)
-                  console.log(file)
+                    const file = new File([blob], 'cropped_image.png', blob);
+                    console.log(file);
 
-                  var formData = new FormData();
-                  formData.append('image', file);
-          
-                  // You need to replace 'upload.php' with the actual server-side script URL
-                  fetch('http://localhost:5000/image', {
-                      method: 'POST',
-                      body: formData
-                  })
-                  .then(response => response.text())
-                  .then(data => {
-                      console.log('Server response:', data);
-                      alert('Image uploaded successfully!');
-                  })
-                  .catch(error => {
-                      console.error('Error:', error);
-                      alert('Error uploading image!');
-                  });
+                    var formData = new FormData();
+                    formData.append('image', file);
 
-                })
+                    fetch('http://localhost:5000/image', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log('Server response:', data);
+                        displayOutput(data); // Display output on the website
 
+                        // Check if the image was uploaded successfully
+                        if (data.includes('successfully')) {
+                            // If successful, hide the retake and save buttons
+                            retakeBtn.style.display = 'none';
+                            saveBtn.style.display = 'none';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        displayOutput('Error uploading image!');
+                    });
+                });
             });
-    
+
             function cropImage(imageData, cropRect) {
                 const canvas = document.createElement('canvas');
                 canvas.width = cropRect.width;
                 canvas.height = cropRect.height;
                 const ctx = canvas.getContext('2d');
-    
+
                 // Draw only the portion inside the centered red rectangle onto the canvas
                 ctx.drawImage(video, cropRect.x, cropRect.y, cropRect.width, cropRect.height, 0, 0, cropRect.width, cropRect.height);
-    
+
                 return ctx.getImageData(0, 0, cropRect.width, cropRect.height);
             }
-    
+
             function displayCroppedImage(croppedImageData) {
                 // Hide the video and overlay
                 video.style.display = 'none';
                 overlay.style.display = 'none';
-    
+
                 // Display the cropped image
                 croppedImage.src = imageDataToDataURL(croppedImageData);
                 croppedImage.style.display = 'block';
             }
-    
+
             function imageDataToDataURL(imageData) {
                 const canvas = document.createElement('canvas');
                 canvas.width = imageData.width;
@@ -217,8 +232,13 @@
                 ctx.putImageData(imageData, 0, 0);
                 return canvas.toDataURL();
             }
+
+            // Function to display output on the website
+            function displayOutput(message) {
+                outputDiv.textContent = message;
+            }
         });
     </script>
-    
+
 </body>
 </html>
