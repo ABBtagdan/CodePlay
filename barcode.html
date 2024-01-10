@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode Image Cropper</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0; /* Light gray background */
+            color: #333; /* Dark text color */
+            font-family: Arial, sans-serif;
+        }
+
+        #container {
+            position: relative;
+            width: 100%;
+            max-width: 640px;
+            text-align: center;
+        }
+
+        #preview {
+            width: 100%;
+            max-width: 640px;
+            border-radius: 8px;
+        }
+
+        #overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50%;
+            height: 30%;
+            border: 2px solid #ff6347; /* Tomato red */
+            pointer-events: none;
+        }
+
+        #captureBtn, #retakeBtn, #saveBtn {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            color: #fff; /* White text color */
+        }
+
+        #captureBtn {
+            background-color: #32cd32; /* Lime green */
+        }
+
+        #retakeBtn, #saveBtn {
+            display: none;
+        }
+
+        #retakeBtn {
+            background-color: #ff6347; /* Tomato red */
+        }
+
+        #saveBtn {
+            background-color: #4169e1; /* Royal blue */
+        }
+
+        #instructions {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="color: #333;">Barcode Image Cropper</h1>
+    <div id="container">
+        <video id="preview" autoplay></video>
+        <div id="overlay"></div>
+        <img id="croppedImage" style="display: none; width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+    </div>
+    <p id="instructions" style="color: #333;">Place your barcode inside the red rectangle and click on the 'Capture Image' button to capture the image.</p>
+    <button id="captureBtn">Capture Image</button>
+    <button id="retakeBtn">Retake Image</button>
+    <button id="saveBtn">Save Image</button>
+    <canvas id="canvas" style="display: none;"></canvas>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const video = document.getElementById('preview');
+            const container = document.getElementById('container');
+            const overlay = document.getElementById('overlay');
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            const captureBtn = document.getElementById('captureBtn');
+            const retakeBtn = document.getElementById('retakeBtn');
+            const saveBtn = document.getElementById('saveBtn');
+            const croppedImage = document.getElementById('croppedImage');
+            const instructions = document.getElementById('instructions');
+    
+            let stream; // To store the stream for reinitializing the camera
+    
+            function initializeCamera() {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function (newStream) {
+                        video.srcObject = newStream;
+                        stream = newStream;
+                    })
+                    .catch(function (err) {
+                        console.error(err);
+                    });
+            }
+    
+            initializeCamera(); // Initialize the camera on page load
+    
+            captureBtn.addEventListener('click', function () {
+                // Pause the video to capture a still frame
+                video.pause();
+    
+                // Draw the current video frame onto the canvas
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+                // Get the image data from the canvas
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    
+                // Calculate the position of the red rectangle relative to the video frame
+                const overlayRect = overlay.getBoundingClientRect();
+                const cropRect = {
+                    x: overlayRect.left - container.offsetLeft,
+                    y: overlayRect.top - container.offsetTop,
+                    width: overlayRect.width,
+                    height: overlayRect.height
+                };
+    
+                // Crop the image to include the barcode region inside the centered red rectangle
+                const croppedImageData = cropImage(imageData, cropRect);
+    
+                // Display the cropped image
+                displayCroppedImage(croppedImageData);
+    
+                // Show the retake and save buttons, hide the capture button
+                captureBtn.style.display = 'none';
+                retakeBtn.style.display = 'block';
+                saveBtn.style.display = 'block';
+    
+                // Update instructions text
+                instructions.textContent = "Are you pleased with the image? If yes, click the 'Save Image' button. If not, then click the 'Retake Image' button.";
+            });
+    
+            retakeBtn.addEventListener('click', function () {
+                // Reload the page to reset the camera preview
+                location.reload();
+            });
+    
+            saveBtn.addEventListener('click', function () {
+                // Save the image locally
+                const dataURL = croppedImage.src;
+                const a = document.createElement('a');
+                a.href = dataURL;
+                a.download = 'cropped_image.png'; // You can customize the filename
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+    
+            function cropImage(imageData, cropRect) {
+                const canvas = document.createElement('canvas');
+                canvas.width = cropRect.width;
+                canvas.height = cropRect.height;
+                const ctx = canvas.getContext('2d');
+    
+                // Draw only the portion inside the centered red rectangle onto the canvas
+                ctx.drawImage(video, cropRect.x, cropRect.y, cropRect.width, cropRect.height, 0, 0, cropRect.width, cropRect.height);
+    
+                return ctx.getImageData(0, 0, cropRect.width, cropRect.height);
+            }
+    
+            function displayCroppedImage(croppedImageData) {
+                // Hide the video and overlay
+                video.style.display = 'none';
+                overlay.style.display = 'none';
+    
+                // Display the cropped image
+                croppedImage.src = imageDataToDataURL(croppedImageData);
+                croppedImage.style.display = 'block';
+            }
+    
+            function imageDataToDataURL(imageData) {
+                const canvas = document.createElement('canvas');
+                canvas.width = imageData.width;
+                canvas.height = imageData.height;
+                const ctx = canvas.getContext('2d');
+                ctx.putImageData(imageData, 0, 0);
+                return canvas.toDataURL();
+            }
+        });
+    </script>
+    
+</body>
+</html>
