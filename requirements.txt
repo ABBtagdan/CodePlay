@@ -11,7 +11,7 @@ clang==5.0
 click==8.0.4
 colorama==0.4.5
 cycler==0.11.0
-dataclasses>=0.8
+dataclasses<=0.6
 Django==3.2.23
 ffmpeg-python==0.2.0
 Flask==2.0.3
