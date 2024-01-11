@@ -1,7 +1,6 @@
 import cv2
 from pyzbar.pyzbar import decode
 from pyzbar.pyzbar import ZBarSymbol
-import matplotlib.pyplot as plt
 import math
 
 def get_sequence_from_image(filepath):
@@ -19,9 +18,6 @@ def get_sequence_from_image(filepath):
             total += pixel
     ret, bw_im = cv2.threshold(im, total/amount, 255, cv2.THRESH_BINARY)
     # zbar
-
-    # plt.imshow(bw_im)
-    # plt.show()
 
     barcodes = decode(bw_im)
 

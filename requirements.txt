@@ -1,6 +1,5 @@
 Flask==2.0.3
 Flask_Cors==4.0.0
-matplotlib==3.3.4
 opencv_python_headless==4.5.2.54
 pyzbar==0.1.9
 Werkzeug==2.0.3
