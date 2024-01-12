@@ -1,8 +1,9 @@
-from sys import platform
+from sys import platform, stdout
 import subprocess
+import os
 
 if platform == "linux" or platform == "linux2":
-    proc = subprocess.Popen('apt-get install libzbar-dev', shell=True, stdin=None, stdout=open(os.devnull,"wb"), stderr=STDOUT, executable="/bin/bash")
+    proc = subprocess.Popen('apt-get install libzbar-dev', shell=True, stdin=None, stdout=open(os.devnull,"wb"), stderr=stdout, executable="/bin/bash")
     proc.wait()
 
 import barcode
