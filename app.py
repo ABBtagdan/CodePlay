@@ -1,3 +1,10 @@
+from sys import platform
+import subprocess
+
+if platform == "linux" or platform == "linux2":
+    proc = subprocess.Popen('apt-get install libzbar-dev', shell=True, stdin=None, stdout=open(os.devnull,"wb"), stderr=STDOUT, executable="/bin/bash")
+    proc.wait()
+
 import barcode
 from flask import Flask, request, Response
 import flask
