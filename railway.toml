@@ -1,2 +1,5 @@
+[build]
+builder = "nixpacks"
+
 [phases.setup]
 nixPkgs = ["...", "python312Packages.python-zbar", "zbar"]
