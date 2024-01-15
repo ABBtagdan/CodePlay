@@ -1,2 +1,2 @@
 [phases.setup]
-aptPkgs = ["...", "libzbar-dev"]
+nixPkgs = ["...", "python312Packages.python-zbar", "zbar"]
