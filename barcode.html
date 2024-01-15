@@ -184,7 +184,7 @@
                     var formData = new FormData();
                     formData.append('image', file);
 
-                    fetch('https://codeplay-test-server-d31789694904.herokuapp.com/image', {
+                    fetch('https://localhost:5000/image', {
                         method: 'POST',
                         body: formData
                     })
