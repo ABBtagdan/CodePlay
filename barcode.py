@@ -2,13 +2,16 @@ import cv2
 from pyzbar.pyzbar import decode
 from pyzbar.pyzbar import ZBarSymbol
 import math
+# import matplotlib.pyplot as plt
+import numpy as np
 
 def get_sequence_from_image(filepath):
 
     # preprocessing using opencv
  # save file 
-    
+    kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
     im = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
+    im2 = cv2.filter2D(im, -1, kernel)
     print(im)
     total = 0
     amount = 0
@@ -16,10 +19,25 @@ def get_sequence_from_image(filepath):
         for pixel in row:
             amount += 1
             total += pixel
-    ret, bw_im = cv2.threshold(im, total/amount, 255, cv2.THRESH_BINARY)
+    ret, bw_im = cv2.threshold(im, total/(amount*1.3), 255, cv2.THRESH_BINARY)
+    total = 0
+    amount = 0
+    for row in im2:
+        for pixel in row:
+            amount += 1
+            total += pixel
+    ret, bw_im2 = cv2.threshold(im2, total/(amount*1.3), 255, cv2.THRESH_BINARY)
     # zbar
+    # plt.imshow(im)
+    # plt.show()
+    # plt.imshow(bw_im)
+    # plt.show()
+    # plt.imshow(im2)
+    # plt.show()
+    # plt.imshow(bw_im2)
+    # plt.show()
 
-    barcodes = decode(bw_im)
+    barcodes = decode(bw_im2)
 
     if not barcodes:
         return "NO BARCODE FOUND"
