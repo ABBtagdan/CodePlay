@@ -260,9 +260,16 @@
                             .then(data => {
                                 console.log('Server response:', data);
                                 displayOutput(data);
-                                console.log("Start Playing") // Display output on the website
-                                init(JSON.parse(data))
-                                play()
+                                console.log("Start Playing")
+                                try{
+                                    init(JSON.parse(data))
+                                    play()
+                                }
+                                catch(e){
+                                    console.log("no list")
+                                }
+                                
+                                
     
                                 // Check if the image was uploaded successfully
                                 if (data.includes('successfully')) {
