@@ -2,10 +2,11 @@
 
 let i = 0
 
+let aud = document.getElementById('audio')
+
 function play (musicList) {
     // console.log(musicList)
     if (i < musicList.length) {
-        let aud = document.getElementById('audio')
         aud.src = musicList[i] + '.mp3'
         // console.log("playing "+musicList[i]+".mp3")
         aud.play()
