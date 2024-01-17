@@ -3,17 +3,8 @@
     <button onclick="play()">
         Play Audio
     </button>
-    <audio id="we-live-we-love-we-lie-made-with-Voicemod-technology.mp3">
+    <audio id="audio">
         <source src="we-live-we-love-we-lie-made-with-Voicemod-technology.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="Find_Your_One_Way.mp3">
-        <source src="Find_Your_One_Way.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="Play_the_Hero.mp3">
-        <source src="Play_the_Hero.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="Operation_Pyrite.mp3">
-        <source src="Operation_Pyrite.mp3" type="audio/mpeg">
     </audio>
 </html>
 <script>
@@ -25,7 +16,8 @@ let i = 0
 function play() {
 
     if (i < musicList.length) {
-        let aud = document.getElementById(musicList[i]);
+        let aud = document.getElementById('audio');
+        aud.src = musicList[i]
         aud.play()
         i++
         aud.addEventListener("ended", function() {
