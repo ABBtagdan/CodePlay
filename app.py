@@ -23,10 +23,13 @@ def barcodeSite():
 def script():
     return Response(open("./playMusic.js").read(), mimetype="text/plain")
 
+@app.route("/sounds/<id>")
+def getSound(id):
+    return Response(open(id).read(), mimetype="audio/mpeg")
+
 # save the image as a picture
 @app.route('/image', methods=['POST'])
 def image():
-
     file = request.files['image']
     print(file)
     filename = secure_filename("temp_image_to_check.png")
