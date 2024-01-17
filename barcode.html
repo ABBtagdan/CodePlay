@@ -261,7 +261,8 @@
                                 console.log('Server response:', data);
                                 displayOutput(data);
                                 console.log("Start Playing") // Display output on the website
-                                play(JSON.parse(data))
+                                init(JSON.parse(data))
+                                play()
     
                                 // Check if the image was uploaded successfully
                                 if (data.includes('successfully')) {
