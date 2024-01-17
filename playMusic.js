@@ -15,7 +15,9 @@ function play () {
     if (i < musicList.length) {
         aud.src = musicList[i] + '.mp3'
         // console.log("playing "+musicList[i]+".mp3")
-        aud.play()
+        aud.play().catch(function(error) {
+            console.error('Error during playback:', error.message);
+        });
         i++
         aud.addEventListener("ended", function () {
             play(musicList)
