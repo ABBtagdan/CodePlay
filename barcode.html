@@ -171,7 +171,7 @@
                         }
 
                         container.addEventListener('click', function () {
-                            try{ trynavigator.mediaDevices.getUserMedia({
+                            try{ navigator.mediaDevices.getUserMedia({
                               video: {
                                 facingMode: {
                                   exact: "environment"
@@ -193,7 +193,7 @@
                                 });
                         }
                         catch(err){
-                            trynavigator.mediaDevices.getUserMedia({
+                            navigator.mediaDevices.getUserMedia({
                               video: {
                                 facingMode: {
                                   exact: "user"
