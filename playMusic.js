@@ -19,9 +19,10 @@ function play () {
             console.error('Error during playback:', error.message);
         });
         i++
-        aud.addEventListener("ended", play())
     }
     else {
         i = 0
     }
 }
+
+aud.addEventListener("ended", ()=>{if (i != 0){play()}})
