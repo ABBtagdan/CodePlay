@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barcode Image Cropper</title>
+    <title>CODEPLAY</title>
     <style>
         body {
             display: flex;
@@ -121,6 +121,8 @@
     <button id="captureBtn" style="display: none;">Capture Image</button>
     <button id="retakeBtn">Retake Image</button>
     <button id="saveBtn">Save Image</button>
+    <button id="flipCameraBtn" style="display: none;">Flip Camera</button>
+
     <canvas id="canvas" style="display: none;"></canvas>
 
     <!-- Output div to display messages -->
@@ -137,12 +139,14 @@
             const captureBtn = document.getElementById('captureBtn');
             const retakeBtn = document.getElementById('retakeBtn');
             const saveBtn = document.getElementById('saveBtn');
+            const flipCameraBtn = document.getElementById('flipCameraBtn');
             const croppedImage = document.getElementById('croppedImage');
             const initialInstructions = document.getElementById('initialInstructions');
             const instructions = document.getElementById('instructions');
             const outputDiv = document.getElementById('output'); // Reference to the output div
     
             let stream; // To store the stream for reinitializing the camera
+            let isFrontCamera = true; // Track whether the front camera is currently in use
     
             function initializeCamera() {
                 // Show the initial instructions
@@ -150,13 +154,16 @@
     
                 // Prompt user for camera access on user gesture
                 container.addEventListener('click', function () {
-                    navigator.mediaDevices.getUserMedia({ video: true })
+                    navigator.mediaDevices.getUserMedia({
+                            video: { facingMode: isFrontCamera ? 'user' : 'environment' }
+                        })
                         .then(function (newStream) {
                             video.srcObject = newStream;
                             stream = newStream;
                             initialInstructions.style.display = 'none';
                             instructions.style.display = 'block';
                             captureBtn.style.display = 'block';
+                            flipCameraBtn.style.display = 'block';
                         })
                         .catch(function (err) {
                             console.error(err);
@@ -201,6 +208,14 @@
     
                 // Update instructions text
                 instructions.textContent = "Are you pleased with the image? If yes, click the 'Save Image' button. If not, then click the 'Retake Image' button.";
+            });
+    
+            flipCameraBtn.addEventListener('click', function () {
+                // Flip the camera by changing the facing mode
+                isFrontCamera = !isFrontCamera;
+    
+                // Reinitialize the camera with the new facing mode
+                initializeCamera();
             });
     
             retakeBtn.addEventListener('click', function () {
