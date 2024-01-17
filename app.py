@@ -25,7 +25,7 @@ def script():
 
 @app.route("/sounds/<id>")
 def getSound(id):
-    return Response(open("/sounds/"+id).read(), mimetype="audio/mpeg")
+    return Response(open("./sounds/"+id).read(), mimetype="audio/mpeg")
 
 # save the image as a picture
 @app.route('/image', methods=['POST'])
