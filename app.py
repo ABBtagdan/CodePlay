@@ -5,6 +5,8 @@ from flask import Flask, request, Response
 import flask
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
+from convertToSound import handleInput
+import json
 
 PATH_TO_TEST_IMAGES_DIR = './images'
 
@@ -28,7 +30,8 @@ def image():
     print(filename)
     seq = barcode.get_sequence_from_image(filename)
     print(seq)
-    return Response(seq, status=200, content_type="text/plain")
+    sound_path_list = handleInput(seq)
+    return Response(json.dumps(sound_path_list), status=200, content_type="text/plain")
 
 if __name__ == '__main__':
     app.run()
