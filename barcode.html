@@ -193,10 +193,11 @@
                         method: 'POST',
                         body: formData
                     })
-                    .then(response => response.text())
+                    .then(response => response.json())
                     .then(data => {
                         console.log('Server response:', data);
-                        displayOutput(data); // Display output on the website
+                        displayOutput(data);
+                        play() // Display output on the website
 
                         // Check if the image was uploaded successfully
                         if (data.includes('successfully')) {

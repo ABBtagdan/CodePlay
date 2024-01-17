@@ -19,6 +19,10 @@ def barcodeSite():
     print("Requested")
     return Response(open('./barcode.html').read(), mimetype="text/html")
 
+@app.route("/playMusic.js")
+def script():
+    return Response(open("./playMusic.js").read(), mimetype="text/script")
+
 # save the image as a picture
 @app.route('/image', methods=['POST'])
 def image():
