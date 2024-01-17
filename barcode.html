@@ -127,6 +127,9 @@
 
     <!-- Output div to display messages -->
     <div id="output"></div>
+    <audio id = "audio">
+        <source src="" type="audio/mpeg">
+    </audio>
 
     <script src="playMusic.js"></script>
     <script>
@@ -244,6 +247,7 @@
                             .then(data => {
                                 console.log('Server response:', data);
                                 displayOutput(data); // Display output on the website
+                                play(JSON.parse(data))
     
                                 // Check if the image was uploaded successfully
                                 if (data.includes('successfully')) {
