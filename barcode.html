@@ -186,7 +186,9 @@
                                     captureBtn.style.display = 'block';
                                     retakeBtn.style.display = 'none';
                                     saveBtn.style.display = 'none';
-                                    flipCameraBtn.style.display = 'block';
+                                    flipCameraBtn.style.display = 'none';
+                                    video.style.transform = "scaleX(1)"
+                                    
                                 })
                                 .catch((err)=>{
                                     navigator.mediaDevices.getUserMedia({video: true})
@@ -198,7 +200,8 @@
                                         captureBtn.style.display = 'block';
                                         retakeBtn.style.display = 'none';
                                         saveBtn.style.display = 'none';
-                                        flipCameraBtn.style.display = 'block';
+                                        flipCameraBtn.style.display = 'none';
+                                        video.style.transform = "scaleX(-1)"
                                     })
                                     .catch(function (err) {
                                         console.error(err);
