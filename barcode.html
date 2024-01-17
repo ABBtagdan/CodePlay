@@ -224,8 +224,9 @@
                     .then(data => {
                         console.log('Server response:', data);
                         displayOutput(data);
-                        play() // Display output on the website
-
+                        if (data[0] == "["){
+                            play(JSON.parse(str.replace(/'/g, "\""))) // Display output on the website
+                        }
                                 // Check if the image was uploaded successfully
                                 if (data.includes('successfully')) {
                                     // If successful, hide the retake and save buttons
