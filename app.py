@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 from flask_cors import CORS
 from convertToSound import handleInput
 import json
+from flask import send_file
 
 PATH_TO_TEST_IMAGES_DIR = './images'
 
@@ -25,7 +26,7 @@ def script():
 
 @app.route("/sounds/<id>")
 def getSound(id):
-    return Response(open(id).read(), mimetype="audio/mpeg")
+    return send_file("./sounds/"+id)
 
 # save the image as a picture
 @app.route('/image', methods=['POST'])

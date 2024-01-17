@@ -256,8 +256,10 @@
                             .then(response => response.text())
                             .then(data => {
                                 console.log('Server response:', data);
-                                displayOutput(data); // Display output on the website
-
+                                displayOutput(data);
+                                console.log("Start Playing") // Display output on the website
+                                play(JSON.parse(data))
+    
                                 // Check if the image was uploaded successfully
                                 if (data.includes('successfully')) {
                                     // If successful, hide the retake and save buttons
