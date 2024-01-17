@@ -33,28 +33,3 @@ def image():
 if __name__ == '__main__':
     app.run()
     
-    
-
-    
-
-
-
-
-"""
-from flask import Flask, request, Response
-
-app = Flask(__name__)
-
-@app.route('/')
-def index():
-    return Response(open('./Index.html').read(), mimetype="text/html")
-
-# simulate an error in the server response
-@app.route('/image', methods=['POST'])
-def image():
-    return Response("Error uploading image!", status=500)
-
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
-
-"""

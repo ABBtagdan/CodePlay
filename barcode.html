@@ -1,5 +1,3 @@
-<!-- Erik Tuominen -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,7 +20,6 @@
         #container {
             position: relative;
             width: 80%;
-            max-height: 75vh;
             max-width: 640px;
             text-align: center;
         }
@@ -44,6 +41,7 @@
             height: 30%;
             border: 2px solid #ff6347; /* Tomato red */
             pointer-events: none;
+            box-sizing: border-box; /* Include border in size calculations */
         }
 
         #captureBtn, #retakeBtn, #saveBtn {
@@ -93,7 +91,7 @@
         <div id="overlay"></div>
         <img id="croppedImage" style="display: none; width: 100%; height: 100%; object-fit: contain; border-radius: 8px; transform: scaleX(-1);"> <!-- Mirror the cropped image -->
     </div>
-    <p id="instructions" style="color: #333;">Click on the red rektangle -- Place your barcode inside the red rectangle and click on the 'Capture Image' button to capture the image.</p>
+    <p id="instructions" style="color: #333;">Click on the red rectangle -- Place your barcode inside the red rectangle and click on the 'Capture Image' button to capture the image.</p>
     <button id="captureBtn">Capture Image</button>
     <button id="retakeBtn">Retake Image</button>
     <button id="saveBtn">Save Image</button>
@@ -135,38 +133,42 @@
             initializeCamera(); // Initialize the camera on page load
 
             captureBtn.addEventListener('click', function () {
-                // Pause the video to capture a still frame
-                video.pause();
+    // Pause the video to capture a still frame
+    video.pause();
 
-                // Draw the current video frame onto the canvas
-                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    // Calculate the scale factor for the image
+    const scaleFactor = video.videoWidth / video.clientWidth;
 
-                // Get the image data from the canvas
-                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    // Draw the current video frame onto the canvas
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-                // Calculate the position of the red rectangle relative to the video frame
-                const overlayRect = overlay.getBoundingClientRect();
-                const cropRect = {
-                    x: overlayRect.left - container.offsetLeft,
-                    y: overlayRect.top - container.offsetTop,
-                    width: overlayRect.width,
-                    height: overlayRect.height
-                };
+    // Get the image data from the canvas
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-                // Crop the image to include the barcode region inside the centered red rectangle
-                const croppedImageData = cropImage(imageData, cropRect);
+    // Calculate the position of the red rectangle relative to the video frame
+    const overlayRect = overlay.getBoundingClientRect();
+    let cropRect = {
+        x: (overlayRect.left - container.offsetLeft) * scaleFactor,
+        y: (overlayRect.top - container.offsetTop) * scaleFactor,
+        width: overlayRect.width * scaleFactor,
+        height: overlayRect.height * scaleFactor
+    };
 
-                // Display the cropped image
-                displayCroppedImage(croppedImageData);
+    // Crop the image to include the barcode region inside the centered red rectangle
+    const croppedImageData = cropImage(imageData, cropRect);
 
-                // Show the retake and save buttons, hide the capture button
-                captureBtn.style.display = 'none';
-                retakeBtn.style.display = 'block';
-                saveBtn.style.display = 'block';
+    // Display the cropped image
+    displayCroppedImage(croppedImageData);
 
-                // Update instructions text
-                instructions.textContent = "Are you pleased with the image? If yes, click the 'Save Image' button. If not, then click the 'Retake Image' button.";
-            });
+    // Show the retake and save buttons, hide the capture button
+    captureBtn.style.display = 'none';
+    retakeBtn.style.display = 'block';
+    saveBtn.style.display = 'block';
+
+    // Update instructions text
+    instructions.textContent = "Are you pleased with the image? If yes, click the 'Save Image' button. If not, then click the 'Retake Image' button.";
+});
+
 
             retakeBtn.addEventListener('click', function () {
                 // Reload the page to reset the camera preview
@@ -204,7 +206,7 @@
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        displayOutput('Error uploading image!');
+                    displayOutput("ERROR: Couldn't reach the server!");
                     });
                 });
             });
