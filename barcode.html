@@ -172,8 +172,12 @@
 
                         container.addEventListener('click', function () {
                             navigator.mediaDevices.getUserMedia({
-                                    video: { facingMode: isFrontCamera ? 'user' : 'environment' }
-                                })
+                              video: {
+                                facingMode: {
+                                  exact: "environment"
+                                }
+                              }
+                            })
                                 .then(function (newStream) {
                                     video.srcObject = newStream;
                                     stream = newStream;
