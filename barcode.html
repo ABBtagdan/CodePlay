@@ -171,7 +171,7 @@
                         }
 
                         container.addEventListener('click', function () {
-                            try{ navigator.mediaDevices.getUserMedia({
+                            navigator.mediaDevices.getUserMedia({
                               video: {
                                 facingMode: {
                                   exact: "environment"
@@ -188,25 +188,23 @@
                                     saveBtn.style.display = 'none';
                                     flipCameraBtn.style.display = 'block';
                                 })
-                        }
-                        catch(err){
-                            navigator.mediaDevices.getUserMedia()
-                                .then(function (newStream) {
-                                    video.srcObject = newStream;
-                                    stream = newStream;
-                                    initialInstructions.style.display = 'none';
-                                    instructions.style.display = 'block';
-                                    captureBtn.style.display = 'block';
-                                    retakeBtn.style.display = 'none';
-                                    saveBtn.style.display = 'none';
-                                    flipCameraBtn.style.display = 'block';
+                                .catch((err)=>{
+                                    navigator.mediaDevices.getUserMedia()
+                                    .then(function (newStream) {
+                                        video.srcObject = newStream;
+                                        stream = newStream;
+                                        initialInstructions.style.display = 'none';
+                                        instructions.style.display = 'block';
+                                        captureBtn.style.display = 'block';
+                                        retakeBtn.style.display = 'none';
+                                        saveBtn.style.display = 'none';
+                                        flipCameraBtn.style.display = 'block';
+                                    })
+                                    .catch(function (err) {
+                                        console.error(err);
+                                    });
                                 })
-                                .catch(function (err) {
-                                    console.error(err);
-                                });
                         }
-                        }
-                        
                         );
                     })
                     .catch(error => {
