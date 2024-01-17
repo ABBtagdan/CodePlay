@@ -193,13 +193,7 @@
                                 });
                         }
                         catch(err){
-                            navigator.mediaDevices.getUserMedia({
-                              video: {
-                                facingMode: {
-                                  exact: "user"
-                                }
-                              }
-                            })
+                            navigator.mediaDevices.getUserMedia()
                                 .then(function (newStream) {
                                     video.srcObject = newStream;
                                     stream = newStream;
