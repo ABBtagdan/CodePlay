@@ -125,6 +125,9 @@
 
     <!-- Output div to display messages -->
     <div id="output"></div>
+    <audio id ="audio">
+        <source src="" type="audio/mpeg">
+    </audio>
 
     <script src="playMusic.js"></script>
     <script>
@@ -220,15 +223,17 @@
                         var formData = new FormData();
                         formData.append('image', file);
 
-                        fetch('https://3c46-16-171-29-166.ngrok-free.app/image', {
-                                method: 'POST',
-                                body: formData
-                            })
-                            .then(response => response.text())
-                            .then(data => {
-                                console.log('Server response:', data);
-                                displayOutput(data); // Display output on the website
-
+                    fetch('https://3c46-16-171-29-166.ngrok-free.app/image', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log('Server response:', data);
+                        displayOutput(data);
+                        if (data[0] == "["){
+                            play(JSON.parse(data.replace(/'/g, "\""))) // Display output on the website
+                        }
                                 // Check if the image was uploaded successfully
                                 if (data.includes('successfully')) {
                                     // If successful, hide the retake and save buttons
