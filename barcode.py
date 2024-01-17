@@ -1,3 +1,5 @@
+#Tage
+
 import cv2
 from pyzbar.pyzbar import decode
 from pyzbar.pyzbar import ZBarSymbol
