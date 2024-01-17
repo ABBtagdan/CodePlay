@@ -189,7 +189,7 @@
                                     flipCameraBtn.style.display = 'block';
                                 })
                                 .catch((err)=>{
-                                    navigator.mediaDevices.getUserMedia()
+                                    navigator.mediaDevices.getUserMedia({video: true})
                                     .then(function (newStream) {
                                         video.srcObject = newStream;
                                         stream = newStream;
