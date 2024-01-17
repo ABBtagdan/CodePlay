@@ -42,7 +42,7 @@ def get_sequence_from_image(filepath):
     barcodes = decode(bw_im2)
 
     if not barcodes:
-        return "NO BARCODE FOUND"
+        return "No barcode found!"
 
     d = ''
 
@@ -59,7 +59,7 @@ def get_sequence_from_image(filepath):
             break
 
     if not d:
-        return "NOT VALID EAN-(13/8) BARCODE"
+        return "Not valid EAN-(13/8) barcode"
 
     left_odd = ["0001101","0011001","0010011", "0111101", "0100011", "0110001", "0101111", "0111011", "0110111", "0001011"]
     right = ["1110010", "1100110", "1101100", "1000010","1011100","1001110", "1010000", "1000100", "1001000", "1110100"]

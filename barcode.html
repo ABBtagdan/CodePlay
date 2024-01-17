@@ -1,5 +1,8 @@
+<!-- Erik Tuominen -->
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,8 +15,10 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0; /* Light gray background */
-            color: #333; /* Dark text color */
+            background-color: #f0f0f0;
+            /* Light gray background */
+            color: #333;
+            /* Dark text color */
             font-family: Arial, sans-serif;
         }
 
@@ -29,7 +34,8 @@
             max-width: 640px;
             height: 100%;
             border-radius: 8px;
-            transform: scaleX(-1); /* Invert vertically */
+            transform: scaleX(-1);
+            /* Invert vertically */
         }
 
         #overlay {
@@ -39,41 +45,54 @@
             transform: translate(-50%, -50%);
             width: 50%;
             height: 30%;
-            border: 2px solid #ff6347; /* Tomato red */
+            border: 2px solid #ff6347;
+            /* Tomato red */
             pointer-events: none;
-            box-sizing: border-box; /* Include border in size calculations */
+            box-sizing: border-box;
+            /* Include border in size calculations */
         }
 
-        #captureBtn, #retakeBtn, #saveBtn {
+        #captureBtn,
+        #retakeBtn,
+        #saveBtn {
             margin-top: 10px;
             padding: 10px;
             font-size: 16px;
             cursor: pointer;
             border: none;
             border-radius: 5px;
-            color: #fff; /* White text color */
+            color: #fff;
+            /* White text color */
         }
 
         #captureBtn {
-            background-color: #32cd32; /* Lime green */
+            background-color: #32cd32;
+            /* Lime green */
         }
 
-        #retakeBtn, #saveBtn {
+        #retakeBtn,
+        #saveBtn {
             display: none;
         }
 
         #retakeBtn {
-            background-color: #ff6347; /* Tomato red */
+            background-color: #ff6347;
+            /* Tomato red */
         }
 
         #saveBtn {
-            background-color: #4169e1; /* Royal blue */
+            background-color: #4169e1;
+            /* Royal blue */
         }
 
         #instructions {
             margin-top: 10px;
             text-align: center;
-            font-size: 18px;
+            font-size: 24px;
+        }
+
+        #initialInstructions {
+            font-size: 24px;
         }
 
         /* Style for the output div */
@@ -84,15 +103,18 @@
         }
     </style>
 </head>
+
 <body>
     <h1 style="color: #333;">Barcode Image Cropper</h1>
     <div id="container">
+        <p id="initialInstructions" style="color: #333;">Click on the red rectangle to start the camera</p>
         <video id="preview" autoplay muted playsinline></video>
         <div id="overlay"></div>
-        <img id="croppedImage" style="display: none; width: 100%; height: 100%; object-fit: contain; border-radius: 8px; transform: scaleX(-1);"> <!-- Mirror the cropped image -->
+        <img id="croppedImage" style="display: none; width: 100%; height: 100%; object-fit: contain; border-radius: 8px; transform: scaleX(-1);"></img>
+        <!-- Mirror the cropped image -->
     </div>
-    <p id="instructions" style="color: #333;">Click on the red rectangle -- Place your barcode inside the red rectangle and click on the 'Capture Image' button to capture the image.</p>
-    <button id="captureBtn">Capture Image</button>
+    <p id="instructions" style="color: #333; display: none;">Place your barcode inside the red rectangle and click on the 'Capture Image' button to capture the image.</p>
+    <button id="captureBtn" style="display: none;">Capture Image</button>
     <button id="retakeBtn">Retake Image</button>
     <button id="saveBtn">Save Image</button>
     <canvas id="canvas" style="display: none;"></canvas>
@@ -112,6 +134,7 @@
             const retakeBtn = document.getElementById('retakeBtn');
             const saveBtn = document.getElementById('saveBtn');
             const croppedImage = document.getElementById('croppedImage');
+            const initialInstructions = document.getElementById('initialInstructions');
             const instructions = document.getElementById('instructions');
             const outputDiv = document.getElementById('output'); // Reference to the output div
 
@@ -120,10 +143,15 @@
             function initializeCamera() {
                 // Prompt user for camera access on user gesture
                 container.addEventListener('click', function () {
-                    navigator.mediaDevices.getUserMedia({ video: true })
+                    navigator.mediaDevices.getUserMedia({
+                            video: true
+                        })
                         .then(function (newStream) {
                             video.srcObject = newStream;
                             stream = newStream;
+                            initialInstructions.style.display = 'none';
+                            instructions.style.display = 'block';
+                            captureBtn.style.display = 'block';
                         })
                         .catch(function (err) {
                             console.error(err);
@@ -134,42 +162,41 @@
             initializeCamera(); // Initialize the camera on page load
 
             captureBtn.addEventListener('click', function () {
-    // Pause the video to capture a still frame
-    video.pause();
+                // Pause the video to capture a still frame
+                video.pause();
 
-    // Calculate the scale factor for the image
-    const scaleFactor = video.videoWidth / video.clientWidth;
+                // Calculate the scale factor for the image
+                const scaleFactor = video.videoWidth / video.clientWidth;
 
-    // Draw the current video frame onto the canvas
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                // Draw the current video frame onto the canvas
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // Get the image data from the canvas
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                // Get the image data from the canvas
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-    // Calculate the position of the red rectangle relative to the video frame
-    const overlayRect = overlay.getBoundingClientRect();
-    let cropRect = {
-        x: (overlayRect.left - container.offsetLeft) * scaleFactor,
-        y: (overlayRect.top - container.offsetTop) * scaleFactor,
-        width: overlayRect.width * scaleFactor,
-        height: overlayRect.height * scaleFactor
-    };
+                // Calculate the position of the red rectangle relative to the video frame
+                const overlayRect = overlay.getBoundingClientRect();
+                let cropRect = {
+                    x: (overlayRect.left - container.offsetLeft) * scaleFactor,
+                    y: (overlayRect.top - container.offsetTop) * scaleFactor,
+                    width: overlayRect.width * scaleFactor,
+                    height: overlayRect.height * scaleFactor
+                };
 
-    // Crop the image to include the barcode region inside the centered red rectangle
-    const croppedImageData = cropImage(imageData, cropRect);
+                // Crop the image to include the barcode region inside the centered red rectangle
+                const croppedImageData = cropImage(imageData, cropRect);
 
-    // Display the cropped image
-    displayCroppedImage(croppedImageData);
+                // Display the cropped image
+                displayCroppedImage(croppedImageData);
 
-    // Show the retake and save buttons, hide the capture button
-    captureBtn.style.display = 'none';
-    retakeBtn.style.display = 'block';
-    saveBtn.style.display = 'block';
+                // Show the retake and save buttons, hide the capture button
+                captureBtn.style.display = 'none';
+                retakeBtn.style.display = 'block';
+                saveBtn.style.display = 'block';
 
-    // Update instructions text
-    instructions.textContent = "Are you pleased with the image? If yes, click the 'Save Image' button. If not, then click the 'Retake Image' button.";
-});
-
+                // Update instructions text
+                instructions.textContent = "Are you pleased with the image? If yes, click the 'Save Image' button. If not, then click the 'Retake Image' button.";
+            });
 
             retakeBtn.addEventListener('click', function () {
                 // Reload the page to reset the camera preview
@@ -181,13 +208,13 @@
                 const img = croppedImage;
 
                 fetch(img.src)
-                .then(res => res.blob())
-                .then(blob => {
-                    const file = new File([blob], 'cropped_image.png', blob);
-                    console.log(file);
+                    .then(res => res.blob())
+                    .then(blob => {
+                        const file = new File([blob], 'cropped_image.png', blob);
+                        console.log(file);
 
-                    var formData = new FormData();
-                    formData.append('image', file);
+                        var formData = new FormData();
+                        formData.append('image', file);
 
                     fetch('https://3c46-16-171-29-166.ngrok-free.app/image', {
                         method: 'POST',
@@ -199,18 +226,18 @@
                         displayOutput(data);
                         play() // Display output on the website
 
-                        // Check if the image was uploaded successfully
-                        if (data.includes('successfully')) {
-                            // If successful, hide the retake and save buttons
-                            retakeBtn.style.display = 'none';
-                            saveBtn.style.display = 'none';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    displayOutput("ERROR: Couldn't reach the server!");
+                                // Check if the image was uploaded successfully
+                                if (data.includes('successfully')) {
+                                    // If successful, hide the retake and save buttons
+                                    retakeBtn.style.display = 'none';
+                                    saveBtn.style.display = 'none';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                displayOutput("ERROR: Couldn't reach the server!");
+                            });
                     });
-                });
             });
 
             function cropImage(imageData, cropRect) {
@@ -252,4 +279,5 @@
     </script>
 
 </body>
+
 </html>
