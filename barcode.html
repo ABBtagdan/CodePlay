@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barcode Image Cropper</title>
+    <title>CODE PLAY - Making Your Barcodes into Music</title>
     <style>
         body {
             display: flex;
@@ -89,6 +89,7 @@
             margin-top: 10px;
             text-align: center;
             font-size: 24px;
+            font-style: italic;
         }
 
         #initialInstructions {
@@ -101,19 +102,25 @@
             font-size: 18px;
             color: #333;
         }
+
+        h1,
+        h2 {
+            font-style: italic;
+        }
     </style>
 </head>
 
 <body>
-    <h1 style="color: #333;">Barcode Image Cropper</h1>
+    <h1 style="color: #333;">CODE PLAY</h1>
+    <h2 style="color: #333; margin-top: -10px; transform: rotate(-15deg);">Making Your Barcodes into Music</h2>
     <div id="container">
-        <p id="initialInstructions" style="color: #333;">Click on the red rectangle to start the camera</p>
+        <p id="initialInstructions" style="color: #333;">Click on the red rectangle</p>
         <video id="preview" autoplay muted playsinline></video>
         <div id="overlay"></div>
         <img id="croppedImage" style="display: none; width: 100%; height: 100%; object-fit: contain; border-radius: 8px; transform: scaleX(-1);"></img>
         <!-- Mirror the cropped image -->
     </div>
-    <p id="instructions" style="color: #333; display: none;">Place your barcode inside the red rectangle and click on the 'Capture Image' button to capture the image.</p>
+    <p id="instructions" style="color: #333; display: none;">Place your barcode inside the red rectangle</p>
     <button id="captureBtn" style="display: none;">Capture Image</button>
     <button id="retakeBtn">Retake Image</button>
     <button id="saveBtn">Save Image</button>
@@ -122,7 +129,6 @@
     <!-- Output div to display messages -->
     <div id="output"></div>
 
-    <script src="playMusic.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const video = document.getElementById('preview');
@@ -134,8 +140,8 @@
             const retakeBtn = document.getElementById('retakeBtn');
             const saveBtn = document.getElementById('saveBtn');
             const croppedImage = document.getElementById('croppedImage');
-            const initialInstructions = document.getElementById('initialInstructions');
             const instructions = document.getElementById('instructions');
+            const initialInstructions = document.getElementById('initialInstructions');
             const outputDiv = document.getElementById('output'); // Reference to the output div
 
             let stream; // To store the stream for reinitializing the camera
@@ -143,15 +149,20 @@
             function initializeCamera() {
                 // Prompt user for camera access on user gesture
                 container.addEventListener('click', function () {
-                    navigator.mediaDevices.getUserMedia({
-                            video: true
-                        })
+                    // Show the initial instructions
+                    initialInstructions.style.display = 'none';
+
+                    // Use environment facing mode to access the back camera
+                    const constraints = {
+                        video: {
+                            facingMode: 'environment'
+                        }
+                    };
+
+                    navigator.mediaDevices.getUserMedia(constraints)
                         .then(function (newStream) {
                             video.srcObject = newStream;
                             stream = newStream;
-                            initialInstructions.style.display = 'none';
-                            instructions.style.display = 'block';
-                            captureBtn.style.display = 'block';
                         })
                         .catch(function (err) {
                             console.error(err);
