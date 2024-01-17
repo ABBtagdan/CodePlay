@@ -1,4 +1,6 @@
+currentDirectory = ""
 def handleInput(input):
+    global currentDirectory
     stringInput = input
 
     #stringInput = input("\n Enter a series of integers from 0 to 4.  --->  ")
