@@ -25,7 +25,7 @@ function play () {
         i++
         setTimeout(function () {
             play()
-        }, 1000)
+        }, 250)
     }
     else {
         i = 0
