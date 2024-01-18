@@ -6,7 +6,7 @@ let aud = document.getElementById('audio')
 
 let musicList = []
 
-function init(ml){
+function init (ml) {
     musicList = ml
 }
 
@@ -15,14 +15,17 @@ function play () {
     if (i < musicList.length) {
         aud.src = musicList[i] + '.mp3'
         // console.log("playing "+musicList[i]+".mp3")
-        aud.play().catch(function(error) {
-            console.error('Error during playback:', error.message);
-        });
+        aud.play().catch(function (error) {
+            console.error('Error during playback:', error.message)
+        })
         i++
+        setTimeout(function () {
+            play()
+        }, 250)
     }
     else {
         i = 0
     }
 }
 
-aud.addEventListener("ended", ()=>{if (i != 0){play()}})
+// aud.addEventListener("ended", ()=>{if (i != 0){play()}})
