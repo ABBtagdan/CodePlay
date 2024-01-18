@@ -249,8 +249,13 @@ let cropRect = {
                                 console.log('Server response:', data);
                                 displayOutput(data);
                                 console.log("Start Playing") // Display output on the website
+                                try {
                                 init(JSON.parse(data))
                                 play()
+                                }
+                                catch (err){
+                                    console.log("not list")
+                                }
     
                                 // Check if the image was uploaded successfully
                                 if (data.includes('successfully')) {
