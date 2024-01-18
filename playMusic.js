@@ -35,7 +35,7 @@ aud.addEventListener('canplaythrough', function () {
     });
     setTimeout(function () {
         play()
-    }, 250)
+    }, 125)
 })
 
 // aud.addEventListener("ended", ()=>{if (i != 0){play()}})
