@@ -13,7 +13,11 @@ function init (ml) {
 function play () {
     // console.log(musicList)
     if (i < musicList.length) {
+        aud.pause()
+
         aud.src = musicList[i] + '.mp3'
+
+        aud.onload()
         // console.log("playing "+musicList[i]+".mp3")
         aud.play().catch(function (error) {
             console.error('Error during playback:', error.message)
