@@ -180,8 +180,12 @@
 
                         container.addEventListener('click', function () {
                             navigator.mediaDevices.getUserMedia({
-                                    video: { facingMode: isFrontCamera ? 'user' : 'environment' }
-                                })
+                              video: {
+                                facingMode: {
+                                  exact: "environment"
+                                }
+                              }
+                            })
                                 .then(function (newStream) {
                                     video.srcObject = newStream;
                                     stream = newStream;
@@ -190,12 +194,29 @@
                                     captureBtn.style.display = 'block';
                                     retakeBtn.style.display = 'none';
                                     saveBtn.style.display = 'none';
-
+                                    flipCameraBtn.style.display = 'none';
+                                    video.style.transform = "scaleX(1)"
+                                    
                                 })
-                                .catch(function (err) {
-                                    console.error(err);
-                                });
-                        });
+                                .catch((err)=>{
+                                    navigator.mediaDevices.getUserMedia({video: true})
+                                    .then(function (newStream) {
+                                        video.srcObject = newStream;
+                                        stream = newStream;
+                                        initialInstructions.style.display = 'none';
+                                        instructions.style.display = 'block';
+                                        captureBtn.style.display = 'block';
+                                        retakeBtn.style.display = 'none';
+                                        saveBtn.style.display = 'none';
+                                        flipCameraBtn.style.display = 'none';
+                                        video.style.transform = "scaleX(-1)"
+                                    })
+                                    .catch(function (err) {
+                                        console.error(err);
+                                    });
+                                })
+                        }
+                        );
                     })
                     .catch(error => {
                         console.error('Error:', error);
@@ -285,9 +306,16 @@
                             .then(data => {
                                 console.log('Server response:', data);
                                 displayOutput(data);
-                                console.log("Start Playing") // Display output on the website
-                                init(JSON.parse(data))
-                                play()
+                                console.log("Start Playing")
+                                try{
+                                    init(JSON.parse(data))
+                                    play()
+                                }
+                                catch(e){
+                                    console.log("no list")
+                                }
+                                
+                                
     
                                 // Check if the image was uploaded successfully
                                 if (data.includes('successfully')) {
