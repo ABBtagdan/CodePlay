@@ -17,7 +17,7 @@ function play () {
 
         aud.src = musicList[i] + '.mp3'
 
-        aud.onload()
+        aud.load()
         // console.log("playing "+musicList[i]+".mp3")
         aud.play().catch(function (error) {
             console.error('Error during playback:', error.message)
