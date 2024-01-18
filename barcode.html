@@ -85,6 +85,10 @@
             background-color: #4169e1;
             /* Royal blue */
         }
+        #playBtn {
+            background-color: #44ff55;
+            /* Royal blue */
+        }
 
 
         #instructions {
@@ -261,10 +265,12 @@ let cropRect = {
                                 try {
                                 init(JSON.parse(data))
                                 playBtn.style.display = "block";
+                                saveBtn.style.display = 'none';
                                 }
                                 catch (err){
                                     console.log("not list")
                                     playBtn.style.display = "none";
+                                    saveBtn.style.display = 'none';
                                     displayOutput(data);
                                 }
     
