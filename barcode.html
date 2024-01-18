@@ -53,8 +53,7 @@
 
         #captureBtn,
         #retakeBtn,
-        #saveBtn,
-        #flipCameraBtn {
+        #saveBtn {
             margin-top: 10px;
             padding: 10px;
             font-size: 16px;
@@ -71,8 +70,7 @@
         }
 
         #retakeBtn,
-        #saveBtn,
-        #flipCameraBtn {
+        #saveBtn {
             display: none;
         }
 
@@ -86,10 +84,6 @@
             /* Royal blue */
         }
 
-        #flipCameraBtn {
-            background-color: #808080;
-            /* Gray */
-        }
 
         #instructions {
             margin-top: 10px;
@@ -128,7 +122,6 @@
     <button id="captureBtn" style="display: none;">Capture Image</button>
     <button id="retakeBtn">Retake Image</button>
     <button id="saveBtn">Save Image</button>
-    <button id="flipCameraBtn" onclick="flipCamera()" style="display: none;">Flip Camera</button>
     <canvas id="canvas" style="display: none;"></canvas>
 
     <!-- Output div to display messages -->
@@ -155,55 +148,41 @@
 
             let stream; // To store the stream for reinitializing the camera
 
-            function initializeCamera() {
                 // Show the initial instructions
-                initialInstructions.style.display = 'block';
-
-                // Prompt user for camera access on user gesture
-                navigator.mediaDevices.enumerateDevices()
-                    .then(devices => {
-                        const videoDevices = devices.filter(device => device.kind === 'videoinput');
-
-                        container.addEventListener('click', function () {
-                            navigator.mediaDevices.getUserMedia({
-                                    video: { facingMode: 'environment' }
-                                })
-                                .then(function (newStream) {
-                                    video.srcObject = newStream;
-                                    stream = newStream;
-                                    initialInstructions.style.display = 'none';
-                                    instructions.style.display = 'block';
-                                    captureBtn.style.display = 'block';
-                                    retakeBtn.style.display = 'none';
-                                    saveBtn.style.display = 'none';
-                                    flipCameraBtn.style.display = 'block';
-                                })
-                                .catch(function (err) {
-                                    console.error(err);
-                                    container.addEventListener('click', function () {
-                            navigator.mediaDevices.getUserMedia({
-                                    video: true
-                                })
-                                .then(function (newStream) {
-                                    video.srcObject = newStream;
-                                    stream = newStream;
-                                    initialInstructions.style.display = 'none';
-                                    instructions.style.display = 'block';
-                                    captureBtn.style.display = 'block';
-                                    retakeBtn.style.display = 'none';
-                                    saveBtn.style.display = 'none';
-                                    flipCameraBtn.style.display = 'block';
-                                })
-                                });
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
+            initialInstructions.style.display = 'block';
+            // Prompt user for camera access on user gesture
+            container.addEventListener('click', function () {
+        navigator.mediaDevices.getUserMedia({
+            video: { facingMode: 'environment' }
+        })
+        .then(function (newStream) {
+            video.srcObject = newStream;
+            stream = newStream;
+            initialInstructions.style.display = 'none';
+            instructions.style.display = 'block';
+            captureBtn.style.display = 'block';
+            retakeBtn.style.display = 'none';
+            saveBtn.style.display = 'none';
+        })
+        .catch(function (err) {
+            console.error(err);
+            navigator.mediaDevices.getUserMedia({
+                video: true
             })
-        }
-
-            initializeCamera(); // Initialize the camera on page load
+            .then(function (newStream) {
+                video.srcObject = newStream;
+                stream = newStream;
+                initialInstructions.style.display = 'none';
+                instructions.style.display = 'block';
+                captureBtn.style.display = 'block';
+                retakeBtn.style.display = 'none';
+                saveBtn.style.display = 'none';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
 
             captureBtn.addEventListener('click', function () {
                 // Pause the video to capture a still frame
@@ -238,7 +217,6 @@ let cropRect = {
                 captureBtn.style.display = 'none';
                 retakeBtn.style.display = 'block';
                 saveBtn.style.display = 'block';
-                flipCameraBtn.style.display = 'none';
 
                 // Update instructions text
                 instructions.textContent = "Are you pleased with the image? If yes, click the 'Save Image' button. If not, then click the 'Retake Image' button.";
@@ -287,11 +265,6 @@ let cropRect = {
                             });
                     });
             });
-
-            function flipCamera() {
-                isFrontCamera = !isFrontCamera;
-                initializeCamera();
-            }
 
             function cropImage(imageData, cropRect) {
                 const canvas = document.createElement('canvas');
