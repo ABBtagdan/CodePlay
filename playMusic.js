@@ -2,19 +2,27 @@
 
 let i = 0
 
-function play (musicList) {
+let aud = document.getElementById('audio')
+
+let musicList = []
+
+function init(ml){
+    musicList = ml
+}
+
+function play () {
     // console.log(musicList)
     if (i < musicList.length) {
-        let aud = document.getElementById('audio')
         aud.src = musicList[i] + '.mp3'
         // console.log("playing "+musicList[i]+".mp3")
-        aud.play()
+        aud.play().catch(function(error) {
+            console.error('Error during playback:', error.message);
+        });
         i++
-        aud.addEventListener("ended", function () {
-            play(musicList)
-        })
     }
     else {
         i = 0
     }
 }
+
+aud.addEventListener("ended", ()=>{if (i != 0){play()}})

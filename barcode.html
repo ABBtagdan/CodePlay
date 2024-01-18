@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CODEPLAY</title>
+    <title>Barcode Image Cropper</title>
     <style>
         body {
             display: flex;
@@ -54,7 +54,8 @@
 
         #captureBtn,
         #retakeBtn,
-        #saveBtn {
+        #saveBtn,
+        #flipCameraBtn {
             margin-top: 10px;
             padding: 10px;
             font-size: 16px;
@@ -71,7 +72,8 @@
         }
 
         #retakeBtn,
-        #saveBtn {
+        #saveBtn,
+        #flipCameraBtn {
             display: none;
         }
 
@@ -83,6 +85,11 @@
         #saveBtn {
             background-color: #4169e1;
             /* Royal blue */
+        }
+
+        #flipCameraBtn {
+            background-color: #808080;
+            /* Gray */
         }
 
         #instructions {
@@ -101,6 +108,7 @@
             font-size: 18px;
             color: #333;
         }
+
         h2 {
             font-style: italic;
         }
@@ -121,13 +129,12 @@
     <button id="captureBtn" style="display: none;">Capture Image</button>
     <button id="retakeBtn">Retake Image</button>
     <button id="saveBtn">Save Image</button>
-    <button id="flipCameraBtn" style="display: none;">Flip Camera</button>
-
+    <button id="flipCameraBtn" onclick="flipCamera()" style="display: none;">Flip Camera</button>
     <canvas id="canvas" style="display: none;"></canvas>
 
     <!-- Output div to display messages -->
     <div id="output"></div>
-    <audio id = "audio">
+    <audio id="audio">
         <source src="" type="audio/mpeg">
     </audio>
 
@@ -147,48 +154,82 @@
             const initialInstructions = document.getElementById('initialInstructions');
             const instructions = document.getElementById('instructions');
             const outputDiv = document.getElementById('output'); // Reference to the output div
-    
+
             let stream; // To store the stream for reinitializing the camera
             let isFrontCamera = true; // Track whether the front camera is currently in use
-    
+
             function initializeCamera() {
                 // Show the initial instructions
                 initialInstructions.style.display = 'block';
-    
+
                 // Prompt user for camera access on user gesture
-                container.addEventListener('click', function () {
-                    navigator.mediaDevices.getUserMedia({
-                            video: { facingMode: isFrontCamera ? 'user' : 'environment' }
-                        })
-                        .then(function (newStream) {
-                            video.srcObject = newStream;
-                            stream = newStream;
-                            initialInstructions.style.display = 'none';
-                            instructions.style.display = 'block';
-                            captureBtn.style.display = 'block';
+                navigator.mediaDevices.enumerateDevices()
+                    .then(devices => {
+                        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+                        if (videoDevices.length > 1) {
                             flipCameraBtn.style.display = 'block';
-                        })
-                        .catch(function (err) {
-                            console.error(err);
-                        });
-                });
+                        }
+
+                        container.addEventListener('click', function () {
+                            navigator.mediaDevices.getUserMedia({
+                              video: {
+                                facingMode: {
+                                  exact: "environment"
+                                }
+                              }
+                            })
+                                .then(function (newStream) {
+                                    video.srcObject = newStream;
+                                    stream = newStream;
+                                    initialInstructions.style.display = 'none';
+                                    instructions.style.display = 'block';
+                                    captureBtn.style.display = 'block';
+                                    retakeBtn.style.display = 'none';
+                                    saveBtn.style.display = 'none';
+                                    flipCameraBtn.style.display = 'none';
+                                    video.style.transform = "scaleX(1)"
+                                    
+                                })
+                                .catch((err)=>{
+                                    navigator.mediaDevices.getUserMedia({video: true})
+                                    .then(function (newStream) {
+                                        video.srcObject = newStream;
+                                        stream = newStream;
+                                        initialInstructions.style.display = 'none';
+                                        instructions.style.display = 'block';
+                                        captureBtn.style.display = 'block';
+                                        retakeBtn.style.display = 'none';
+                                        saveBtn.style.display = 'none';
+                                        flipCameraBtn.style.display = 'none';
+                                        video.style.transform = "scaleX(-1)"
+                                    })
+                                    .catch(function (err) {
+                                        console.error(err);
+                                    });
+                                })
+                        }
+                        );
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
             }
-    
+
             initializeCamera(); // Initialize the camera on page load
-    
+
             captureBtn.addEventListener('click', function () {
                 // Pause the video to capture a still frame
                 video.pause();
-    
+
                 // Calculate the scale factor for the image
                 const scaleFactor = video.videoWidth / video.clientWidth;
-    
+
                 // Draw the current video frame onto the canvas
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    
+
                 // Get the image data from the canvas
                 const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    
+
                 // Calculate the position of the red rectangle relative to the video frame
                 const overlayRect = overlay.getBoundingClientRect();
                 let cropRect = {
@@ -197,48 +238,41 @@
                     width: overlayRect.width * scaleFactor,
                     height: overlayRect.height * scaleFactor
                 };
-    
+
                 // Crop the image to include the barcode region inside the centered red rectangle
                 const croppedImageData = cropImage(imageData, cropRect);
-    
+
                 // Display the cropped image
                 displayCroppedImage(croppedImageData);
-    
+
                 // Show the retake and save buttons, hide the capture button
                 captureBtn.style.display = 'none';
                 retakeBtn.style.display = 'block';
                 saveBtn.style.display = 'block';
-    
+                flipCameraBtn.style.display = 'none';
+
                 // Update instructions text
                 instructions.textContent = "Are you pleased with the image? If yes, click the 'Save Image' button. If not, then click the 'Retake Image' button.";
             });
-    
-            flipCameraBtn.addEventListener('click', function () {
-                // Flip the camera by changing the facing mode
-                isFrontCamera = !isFrontCamera;
-    
-                // Reinitialize the camera with the new facing mode
-                initializeCamera();
-            });
-    
+
             retakeBtn.addEventListener('click', function () {
                 // Reload the page to reset the camera preview
                 location.reload();
             });
-    
+
             saveBtn.addEventListener('click', function () {
                 // Save the image locally
                 const img = croppedImage;
-    
+
                 fetch(img.src)
                     .then(res => res.blob())
                     .then(blob => {
                         const file = new File([blob], 'cropped_image.png', blob);
                         console.log(file);
-    
+
                         var formData = new FormData();
                         formData.append('image', file);
-    
+
                         fetch('https://3c46-16-171-29-166.ngrok-free.app/image', {
                                 method: 'POST',
                                 body: formData
@@ -246,8 +280,17 @@
                             .then(response => response.text())
                             .then(data => {
                                 console.log('Server response:', data);
-                                displayOutput(data); // Display output on the website
-                                play(JSON.parse(data))
+                                displayOutput(data);
+                                console.log("Start Playing")
+                                try{
+                                    init(JSON.parse(data))
+                                    play()
+                                }
+                                catch(e){
+                                    console.log("no list")
+                                }
+                                
+                                
     
                                 // Check if the image was uploaded successfully
                                 if (data.includes('successfully')) {
@@ -262,29 +305,34 @@
                             });
                     });
             });
-    
+
+            function flipCamera() {
+                isFrontCamera = !isFrontCamera;
+                initializeCamera();
+            }
+
             function cropImage(imageData, cropRect) {
                 const canvas = document.createElement('canvas');
                 canvas.width = cropRect.width;
                 canvas.height = cropRect.height;
                 const ctx = canvas.getContext('2d');
-    
+
                 // Draw only the portion inside the centered red rectangle onto the canvas
                 ctx.drawImage(video, cropRect.x, cropRect.y, cropRect.width, cropRect.height, 0, 0, cropRect.width, cropRect.height);
-    
+
                 return ctx.getImageData(0, 0, cropRect.width, cropRect.height);
             }
-    
+
             function displayCroppedImage(croppedImageData) {
                 // Hide the video and overlay
                 video.style.display = 'none';
                 overlay.style.display = 'none';
-    
+
                 // Display the cropped image
                 croppedImage.src = imageDataToDataURL(croppedImageData);
                 croppedImage.style.display = 'block';
             }
-    
+
             function imageDataToDataURL(imageData) {
                 const canvas = document.createElement('canvas');
                 canvas.width = imageData.width;
@@ -293,14 +341,13 @@
                 ctx.putImageData(imageData, 0, 0);
                 return canvas.toDataURL();
             }
-    
+
             // Function to display output on the website
             function displayOutput(message) {
                 outputDiv.textContent = message;
             }
         });
     </script>
-    
 
 </body>
 
