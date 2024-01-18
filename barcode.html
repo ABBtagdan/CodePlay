@@ -148,14 +148,12 @@
             const captureBtn = document.getElementById('captureBtn');
             const retakeBtn = document.getElementById('retakeBtn');
             const saveBtn = document.getElementById('saveBtn');
-            const flipCameraBtn = document.getElementById('flipCameraBtn');
             const croppedImage = document.getElementById('croppedImage');
             const initialInstructions = document.getElementById('initialInstructions');
             const instructions = document.getElementById('instructions');
             const outputDiv = document.getElementById('output'); // Reference to the output div
 
             let stream; // To store the stream for reinitializing the camera
-            let isFrontCamera = true; // Track whether the front camera is currently in use
 
             function initializeCamera() {
                 // Show the initial instructions
@@ -165,13 +163,10 @@
                 navigator.mediaDevices.enumerateDevices()
                     .then(devices => {
                         const videoDevices = devices.filter(device => device.kind === 'videoinput');
-                        if (videoDevices.length > 1) {
-                            flipCameraBtn.style.display = 'block';
-                        }
 
                         container.addEventListener('click', function () {
                             navigator.mediaDevices.getUserMedia({
-                                    video: { facingMode: isFrontCamera ? 'user' : 'environment' }
+                                    video: { facingMode: 'environment' }
                                 })
                                 .then(function (newStream) {
                                     video.srcObject = newStream;
@@ -185,13 +180,28 @@
                                 })
                                 .catch(function (err) {
                                     console.error(err);
+                                    container.addEventListener('click', function () {
+                            navigator.mediaDevices.getUserMedia({
+                                    video: true
+                                })
+                                .then(function (newStream) {
+                                    video.srcObject = newStream;
+                                    stream = newStream;
+                                    initialInstructions.style.display = 'none';
+                                    instructions.style.display = 'block';
+                                    captureBtn.style.display = 'block';
+                                    retakeBtn.style.display = 'none';
+                                    saveBtn.style.display = 'none';
+                                    flipCameraBtn.style.display = 'block';
+                                })
                                 });
                         });
                     })
                     .catch(error => {
                         console.error('Error:', error);
                     });
-            }
+            })
+        }
 
             initializeCamera(); // Initialize the camera on page load
 
