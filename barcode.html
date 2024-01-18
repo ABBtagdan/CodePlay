@@ -1,5 +1,6 @@
 <!-- Erik Tuominen -->
 
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -54,7 +55,8 @@
 
         #captureBtn,
         #retakeBtn,
-        #saveBtn{
+        #saveBtn,
+        #flipCameraBtn {
             margin-top: 10px;
             padding: 10px;
             font-size: 16px;
@@ -64,13 +66,15 @@
             color: #fff;
             /* White text color */
         }
+
         #captureBtn {
             background-color: #32cd32;
             /* Lime green */
         }
 
         #retakeBtn,
-        #saveBtn{
+        #saveBtn,
+        #flipCameraBtn {
             display: none;
         }
 
@@ -84,7 +88,10 @@
             /* Royal blue */
         }
 
- 
+        #flipCameraBtn {
+            background-color: #808080;
+            /* Gray */
+        }
 
         #instructions {
             margin-top: 10px;
@@ -123,6 +130,7 @@
     <button id="captureBtn" style="display: none;">Capture Image</button>
     <button id="retakeBtn">Retake Image</button>
     <button id="saveBtn">Save Image</button>
+    <button id="flipCameraBtn" onclick="flipCamera()" style="display: none;">Flip Camera</button>
     <canvas id="canvas" style="display: none;"></canvas>
 
     <!-- Output div to display messages -->
@@ -142,6 +150,7 @@
             const captureBtn = document.getElementById('captureBtn');
             const retakeBtn = document.getElementById('retakeBtn');
             const saveBtn = document.getElementById('saveBtn');
+            const flipCameraBtn = document.getElementById('flipCameraBtn');
             const croppedImage = document.getElementById('croppedImage');
             const initialInstructions = document.getElementById('initialInstructions');
             const instructions = document.getElementById('instructions');
@@ -157,7 +166,10 @@
                 // Prompt user for camera access on user gesture
                 navigator.mediaDevices.enumerateDevices()
                     .then(devices => {
-
+                        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+                        if (videoDevices.length > 1) {
+                            flipCameraBtn.style.display = 'block';
+                        }
 
                         container.addEventListener('click', function () {
                             navigator.mediaDevices.getUserMedia({
@@ -171,7 +183,7 @@
                                     captureBtn.style.display = 'block';
                                     retakeBtn.style.display = 'none';
                                     saveBtn.style.display = 'none';
-
+                                    flipCameraBtn.style.display = 'block';
                                 })
                                 .catch(function (err) {
                                     console.error(err);
@@ -218,7 +230,7 @@ let cropRect = {
                 captureBtn.style.display = 'none';
                 retakeBtn.style.display = 'block';
                 saveBtn.style.display = 'block';
-
+                flipCameraBtn.style.display = 'none';
 
                 // Update instructions text
                 instructions.textContent = "Are you pleased with the image? If yes, click the 'Save Image' button. If not, then click the 'Retake Image' button.";
@@ -268,7 +280,10 @@ let cropRect = {
                     });
             });
 
- 
+            function flipCamera() {
+                isFrontCamera = !isFrontCamera;
+                initializeCamera();
+            }
 
             function cropImage(imageData, cropRect) {
                 const canvas = document.createElement('canvas');
