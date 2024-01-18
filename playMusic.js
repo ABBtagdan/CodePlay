@@ -23,9 +23,6 @@ function play () {
         //     console.error('Error during playback:', error.message)
         // })
         i++
-        setTimeout(function () {
-            play()
-        }, 250)
     }
     else {
         i = 0
@@ -36,6 +33,9 @@ aud.addEventListener('canplaythrough', function () {
     aud.play().catch(function (error) {
         console.error('Error during playback:', error.message);
     });
+    setTimeout(function () {
+        play()
+    }, 250)
 })
 
 // aud.addEventListener("ended", ()=>{if (i != 0){play()}})
