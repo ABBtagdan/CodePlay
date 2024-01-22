@@ -50,7 +50,7 @@ def image():
 
 @app.route("/instrument", methods=['POST'])
 def instrument():
-    inst = request.data
+    inst = str(request.data)
     print(inst)
     return Response(status=200)
 
