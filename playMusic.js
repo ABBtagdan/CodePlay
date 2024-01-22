@@ -15,6 +15,7 @@ function play () {
     aud.pause()
     aud.src = musicList[i] + '.mp3'
     aud.load()
+    aud.play()
         // console.log("playing "+musicList[i]+".mp3")
         // aud.play().catch(function (error) {
         //     console.error('Error during playback:', error.message)

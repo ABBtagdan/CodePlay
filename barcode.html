@@ -51,6 +51,8 @@
             /* Include border in size calculations */
         }
 
+        #piano,
+        #drums,
         #captureBtn,
         #retakeBtn,
         #saveBtn,
@@ -70,6 +72,8 @@
             /* Lime green */
         }
 
+        #piano,
+        #drums,
         #retakeBtn,
         #saveBtn,
         #playBtn {
@@ -89,6 +93,17 @@
             background-color: #44ff55;
             /* Royal blue */
         }
+
+        #piano,
+        #drums {
+            background-color: white;
+            border: #333;
+        }
+
+        #instruments {
+            margin: 10px;
+        }
+
 
 
         #instructions {
@@ -127,7 +142,11 @@
     <p id="instructions" style="color: #333; display: none;">Place your barcode inside the red rectangle and click on the 'Capture Image' button to capture the image.</p>
     <button id="captureBtn" style="display: none;">Capture Image</button>
     <button id="retakeBtn">Retake Image</button>
-    <button id="saveBtn">Save Image</button>
+    <div id="instruments">
+        <button id = "piano">PIANO</button>
+        <button id = "drums">DRUMS</button>
+    </div>
+    <button id="saveBtn">Create Song</button>
     <button id="playBtn">Play</button>
     <canvas id="canvas" style="display: none;"></canvas>
 
@@ -153,6 +172,22 @@
             const instructions = document.getElementById('instructions');
             const outputDiv = document.getElementById('output'); // Reference to the output div
             const playBtn = document.getElementById('playBtn');
+            const piano = document.getElementById("pinao");
+            const drums = document.getElementById("drums");
+
+            piano.addEventListener("click", () => {
+                fetch('https://3c46-16-171-29-166.ngrok-free.app/instrument', {
+                    method: 'POST',
+                    body: "Piano"
+                })
+            })
+
+            drums.addEventListener("click", () => {
+                fetch('https://3c46-16-171-29-166.ngrok-free.app/instrument', {
+                    method: 'POST',
+                    body: "Drums"
+                })
+            })
 
             let stream; // To store the stream for reinitializing the camera
 
@@ -253,7 +288,7 @@ let cropRect = {
 
                         var formData = new FormData();
                         formData.append('image', file);
-
+            
                         fetch('https://3c46-16-171-29-166.ngrok-free.app/image', {
                                 method: 'POST',
                                 body: formData
