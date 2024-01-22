@@ -45,7 +45,7 @@ def image():
     sound_path_list = handleInput(seq)
     sound_path_list = concat_sound(sound_path_list, inst)
     rsp = Response(json.dumps(sound_path_list), status=200, content_type="text/plain")
-    rsp.headers.add("Expires", "0")
+    rsp.cache_control.max_age = 0
     return rsp
 
 @app.route("/instrument", methods=['POST'])
