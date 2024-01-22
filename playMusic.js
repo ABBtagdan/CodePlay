@@ -11,7 +11,7 @@ function init (ml) {
 }
 
 function play () {
-    // console.log(musicList)
+    console.log(musicList)
     aud.pause()
     aud.src = musicList[i] + '.mp3'
     aud.load()
