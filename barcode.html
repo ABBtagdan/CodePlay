@@ -51,10 +51,12 @@
             /* Include border in size calculations */
         }
 
+        #piano,
+        #drums,
         #captureBtn,
         #retakeBtn,
         #saveBtn,
-        #flipCameraBtn {
+        #playBtn {
             margin-top: 10px;
             padding: 10px;
             font-size: 16px;
@@ -70,9 +72,11 @@
             /* Lime green */
         }
 
+        #piano,
+        #drums,
         #retakeBtn,
         #saveBtn,
-        #flipCameraBtn {
+        #playBtn {
             display: none;
         }
 
@@ -85,11 +89,22 @@
             background-color: #4169e1;
             /* Royal blue */
         }
-
-        #flipCameraBtn {
-            background-color: #808080;
-            /* Gray */
+        #playBtn {
+            background-color: #44ff55;
+            /* Royal blue */
         }
+
+        #piano,
+        #drums {
+            background-color: white;
+            border: #333;
+        }
+
+        #instruments {
+            margin: 10px;
+        }
+
+
 
         #instructions {
             margin-top: 10px;
@@ -127,8 +142,12 @@
     <p id="instructions" style="color: #333; display: none;">Place your barcode inside the red rectangle and click on the 'Capture Image' button to capture the image.</p>
     <button id="captureBtn" style="display: none;">Capture Image</button>
     <button id="retakeBtn">Retake Image</button>
-    <button id="saveBtn">Save Image</button>
-    <button id="flipCameraBtn" onclick="flipCamera()" style="display: none;">Flip Camera</button>
+    <div id="instruments">
+        <button id = "piano">PIANO</button>
+        <button id = "drums">DRUMS</button>
+    </div>
+    <button id="saveBtn">Create Song</button>
+    <button id="playBtn">Play</button>
     <canvas id="canvas" style="display: none;"></canvas>
 
     <!-- Output div to display messages -->
@@ -152,58 +171,67 @@
             const initialInstructions = document.getElementById('initialInstructions');
             const instructions = document.getElementById('instructions');
             const outputDiv = document.getElementById('output'); // Reference to the output div
+            const playBtn = document.getElementById('playBtn');
+            const piano = document.getElementById("pinao");
+            const drums = document.getElementById("drums");
+
+            piano.addEventListener("click", () => {
+                fetch('https://3c46-16-171-29-166.ngrok-free.app/instrument', {
+                    method: 'POST',
+                    body: "Piano"
+                })
+            })
+
+            drums.addEventListener("click", () => {
+                fetch('https://3c46-16-171-29-166.ngrok-free.app/instrument', {
+                    method: 'POST',
+                    body: "Drums"
+                })
+            })
 
             let stream; // To store the stream for reinitializing the camera
 
-            function initializeCamera() {
                 // Show the initial instructions
-                initialInstructions.style.display = 'block';
+            initialInstructions.style.display = 'block';
 
-                // Prompt user for camera access on user gesture
-                navigator.mediaDevices.enumerateDevices()
-                    .then(devices => {
-                        const videoDevices = devices.filter(device => device.kind === 'videoinput');
-
-                        container.addEventListener('click', function () {
-                            navigator.mediaDevices.getUserMedia({
-                                    video: { facingMode: 'environment' }
-                                })
-                                .then(function (newStream) {
-                                    video.srcObject = newStream;
-                                    stream = newStream;
-                                    initialInstructions.style.display = 'none';
-                                    instructions.style.display = 'block';
-                                    captureBtn.style.display = 'block';
-                                    retakeBtn.style.display = 'none';
-                                    saveBtn.style.display = 'none';
-                                    flipCameraBtn.style.display = 'block';
-                                })
-                                .catch(function (err) {
-                                    console.error(err);
-                                    container.addEventListener('click', function () {
-                            navigator.mediaDevices.getUserMedia({
-                                    video: true
-                                })
-                                .then(function (newStream) {
-                                    video.srcObject = newStream;
-                                    stream = newStream;
-                                    initialInstructions.style.display = 'none';
-                                    instructions.style.display = 'block';
-                                    captureBtn.style.display = 'block';
-                                    retakeBtn.style.display = 'none';
-                                    saveBtn.style.display = 'none';
-                                    flipCameraBtn.style.display = 'block';
-                                })
-                                });
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
+            playBtn.addEventListener("click", () => {
+                play()
             })
-        }
-
-            initializeCamera(); // Initialize the camera on page load
+            // Prompt user for camera access on user gesture
+            container.addEventListener('click', function () {
+        navigator.mediaDevices.getUserMedia({
+            video: { facingMode: 'environment' }
+        })
+        .then(function (newStream) {
+            video.srcObject = newStream;
+            stream = newStream;
+            initialInstructions.style.display = 'none';
+            instructions.style.display = 'block';
+            captureBtn.style.display = 'block';
+            retakeBtn.style.display = 'none';
+            saveBtn.style.display = 'none';
+            video.style.transform = "scaleX(1)"
+        })
+        .catch(function (err) {
+            console.log(err);
+            navigator.mediaDevices.getUserMedia({
+                video: true
+            })
+            .then(function (newStream) {
+                video.srcObject = newStream;
+                stream = newStream;
+                initialInstructions.style.display = 'none';
+                instructions.style.display = 'block';
+                captureBtn.style.display = 'block';
+                retakeBtn.style.display = 'none';
+                saveBtn.style.display = 'none';
+                video.style.transform = "scaleX(-1)"
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
 
             captureBtn.addEventListener('click', function () {
                 // Pause the video to capture a still frame
@@ -238,7 +266,6 @@ let cropRect = {
                 captureBtn.style.display = 'none';
                 retakeBtn.style.display = 'block';
                 saveBtn.style.display = 'block';
-                flipCameraBtn.style.display = 'none';
 
                 // Update instructions text
                 instructions.textContent = "Are you pleased with the image? If yes, click the 'Save Image' button. If not, then click the 'Retake Image' button.";
@@ -261,7 +288,7 @@ let cropRect = {
 
                         var formData = new FormData();
                         formData.append('image', file);
-
+            
                         fetch('https://3c46-16-171-29-166.ngrok-free.app/image', {
                                 method: 'POST',
                                 body: formData
@@ -269,10 +296,18 @@ let cropRect = {
                             .then(response => response.text())
                             .then(data => {
                                 console.log('Server response:', data);
-                                displayOutput(data);
                                 console.log("Start Playing") // Display output on the website
+                                try {
                                 init(JSON.parse(data))
-                                play()
+                                playBtn.style.display = "block";
+                                saveBtn.style.display = 'none';
+                                }
+                                catch (err){
+                                    console.log("not list")
+                                    playBtn.style.display = "none";
+                                    saveBtn.style.display = 'none';
+                                    displayOutput(data);
+                                }
     
                                 // Check if the image was uploaded successfully
                                 if (data.includes('successfully')) {
@@ -287,11 +322,6 @@ let cropRect = {
                             });
                     });
             });
-
-            function flipCamera() {
-                isFrontCamera = !isFrontCamera;
-                initializeCamera();
-            }
 
             function cropImage(imageData, cropRect) {
                 const canvas = document.createElement('canvas');

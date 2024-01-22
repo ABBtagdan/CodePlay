@@ -8,12 +8,14 @@ from flask_cors import CORS
 from convertToSound import handleInput
 import json
 from flask import send_file
+from create_song import concat_sound
 
 PATH_TO_TEST_IMAGES_DIR = './images'
 
 app = Flask(__name__)
 CORS(app)
 
+inst = "Drums"
 
 @app.route('/')
 def barcodeSite():
@@ -41,7 +43,16 @@ def image():
     if seq[0] not in ["0", "1", "2", "3", "4"]:
         return Response("ERROR: "+seq, status=200, content_type="text/plain")
     sound_path_list = handleInput(seq)
-    return Response(json.dumps(sound_path_list), status=200, content_type="text/plain")
+    sound_path_list = concat_sound(sound_path_list, inst)
+    rsp = Response(json.dumps(sound_path_list), status=200, content_type="text/plain")
+    rsp.headers.add("Expires", "0")
+    return rsp
+
+@app.route("/instrument", methods=['POST'])
+def instrument():
+    inst = request.data
+    print(inst)
+    return Response(status=200)
 
 if __name__ == '__main__':
     app.run()
