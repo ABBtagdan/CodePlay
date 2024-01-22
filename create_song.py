@@ -3,7 +3,7 @@
 from pydub import AudioSegment
 import os
 
-soundrange = {"doo": (4000, 4250), "ree": (3000, 3250), "mii": (2000, 2250), "faa": (1000, 1250), "sol": (0,250)}
+soundrange = {"doo": (3750, 4000), "ree": (3000, 3250), "mii": (2000, 2250), "faa": (1000, 1250), "sol": (0,250)}
 
 def concat_sound(sound_list, instrument):
     uncut_audio = AudioSegment.from_mp3(f"./sounds/{instrument}.mp3")
