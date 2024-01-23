@@ -1,3 +1,9 @@
+// Olle Ö
+
+// Needs 3 buttons with id: record, listen, satisfied
+
+// Needs audio tag with id: recordedAudio
+
 navigator.mediaDevices.getUserMedia({ audio: true })
     .then(stream => { handlerFunction(stream) })
 
@@ -20,9 +26,8 @@ function handlerFunction (stream) {
 function sendData (data) { }
 record.onclick = e => {
     record.disabled = true
-    record.style.backgroundColor = "blue"
-    // stopRecord.disabled=false;
-    // resume.disabled = true;
+    satisfied.disabled = true
+    listen.disabled = true
     audioChunks = []
     if (i == 0) {
         rec.start()
@@ -33,13 +38,25 @@ record.onclick = e => {
     setTimeout(function () {
         i++
         record.disabled = false
-        // stopRecord.disabled=true;
-        record.style.backgroundColor = "white"
         if (i == 4) {
+            satisfied.disabled = false
+            listen.disabled = false
             rec.stop()
         }
         else {
             rec.pause()
         }
-    }, 1050)
+    }, 1000)
+}
+
+listen.onclick = e => {
+    recordedAudio.play()
+}
+
+satisfied.onclick = e => {
+    fetch(blob,
+        {
+            method: "POST",
+            body: "recording",
+        })
 }
