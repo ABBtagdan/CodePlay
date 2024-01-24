@@ -1,9 +1,5 @@
 // Olle Ö
 
-// Needs 3 buttons with id: record, listen, satisfied
-
-// Needs audio tag with id: recordedAudio
-
 navigator.mediaDevices.getUserMedia({ audio: true })
     .then(stream => { handlerFunction(stream) })
 
