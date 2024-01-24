@@ -38,6 +38,7 @@ record.onclick = e => {
             satisfied.disabled = false
             listen.disabled = false
             rec.stop()
+            i = 0
         }
         else {
             rec.pause()
@@ -50,6 +51,7 @@ listen.onclick = e => {
 }
 
 satisfied.onclick = e => {
+    makeRec(recordedAudio.src)
     fetch(blob,
         {
             method: "POST",
