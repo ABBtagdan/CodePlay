@@ -25,17 +25,17 @@ function getCookie (cname) {
 }
 
 // Checks for existing cookie
-function checkCookie () {
-    let user = getCookie("username")
-    if (user != "") {
-        alert("Welcome again " + user)
-    } else {
-        user = prompt("Please enter your name:", "")
-        if (user != "" && user != null) {
-            setCookie("username", user, 365)
-        }
+// function checkCookie () {
+let user = getCookie("username")
+if (user != "") {
+    alert("Welcome again " + user)
+} else {
+    user = prompt("Please enter your name:", "")
+    if (user != "" && user != null) {
+        setCookie("username", user, 365)
     }
 }
+// }
 
 // Saves recordings as a value in cookie
 function makeRec (cvalue) {
