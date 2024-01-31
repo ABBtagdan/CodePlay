@@ -3,6 +3,7 @@
 record = document.getElementById('record')
 listen = document.getElementById('listen')
 satisfied = document.getElementById('satisfied')
+recordedAudio = document.getElementById('recordedAudio')
 
 // Makes it posible to record audio
 navigator.mediaDevices.getUserMedia({ audio: true })
@@ -17,7 +18,7 @@ function handlerFunction (stream) {
         if (rec.state == "inactive") {
             let blob = new Blob(audioChunks, { type: 'audio/mp3' })
             recordedAudio.src = URL.createObjectURL(blob)
-            recordedAudio.controls = true
+            recordedAudio.controls = false
             recordedAudio.autoplay = true
             sendData(blob)
         }
