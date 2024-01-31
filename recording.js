@@ -11,6 +11,7 @@ navigator.mediaDevices.getUserMedia({ audio: true })
 let i = 0
 
 function handlerFunction (stream) {
+    console.log("Got media device")
     rec = new MediaRecorder(stream)
     rec.ondataavailable = e => {
         audioChunks.push(e.data)
