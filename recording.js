@@ -1,5 +1,9 @@
+// Olle Ö
+
 navigator.mediaDevices.getUserMedia({ audio: true })
     .then(stream => { handlerFunction(stream) })
+
+let i = 0
 
 function handlerFunction (stream) {
     rec = new MediaRecorder(stream)
@@ -18,15 +22,39 @@ function handlerFunction (stream) {
 function sendData (data) { }
 record.onclick = e => {
     record.disabled = true
-    record.style.backgroundColor = "blue"
-    stopRecord.disabled = false
+    satisfied.disabled = true
+    listen.disabled = true
     audioChunks = []
-    rec.start()
+    if (i == 0) {
+        rec.start()
+    }
+    else {
+        rec.resume()
+    }
+    setTimeout(function () {
+        i++
+        record.disabled = false
+        if (i == 4) {
+            satisfied.disabled = false
+            listen.disabled = false
+            rec.stop()
+            i = 0
+        }
+        else {
+            rec.pause()
+        }
+    }, 1000)
 }
-stopRecord.onclick = e => {
-    record.disabled = false
-    stop.disabled = true
-    stopRecord.disabled = false
-    record.style.backgroundColor = "red"
-    rec.stop()
+
+listen.onclick = e => {
+    recordedAudio.play()
+}
+
+satisfied.onclick = e => {
+    makeRec(recordedAudio.src)
+    fetch(blob,
+        {
+            method: "POST",
+            body: "recording",
+        })
 }
