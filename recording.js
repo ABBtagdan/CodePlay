@@ -1,5 +1,9 @@
 // Olle Ö
 
+record = document.getElementById('record')
+listen = document.getElementById('listen')
+satisfied = document.getElementById('satisfied')
+
 // Makes it posible to record audio
 navigator.mediaDevices.getUserMedia({ audio: true })
     .then(stream => { handlerFunction(stream) })
