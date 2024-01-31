@@ -19,7 +19,7 @@ function handlerFunction (stream) {
     rec.ondataavailable = e => {
         audioChunks.push(e.data)
         if (rec.state == "inactive") {
-            blob = new Blob(audioChunks, { type: 'audio/mp3' })
+            blob = new Blob(audioChunks, { type: 'audio/mpeg' })
             recordedAudio.src = URL.createObjectURL(blob)
             recordedAudio.controls = false
             recordedAudio.autoplay = true
@@ -64,7 +64,7 @@ listen.onclick = e => {
 // Sends of the finished recording to the server
 satisfied.onclick = e => {
     // makeRec(recordedAudio.src)
-    const file = new File([blob], 'cropped_image.png', blob);
+    const file = new File([blob], 'recording.mp3', blob);
 
     // Create a new FormData object and append the file to it
     var formData = new FormData();
