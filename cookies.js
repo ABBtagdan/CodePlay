@@ -40,7 +40,7 @@ if (user != "") {
 // Saves recordings as a value in cookie
 function makeRec (cvalue) {
     let ca = document.cookie
-    for (let i = 0; i < ca.length; i++) {
+    for (let i = 0; i < 5; i++) {
         if (('rec' + i + '=') in ca) {
             continue
         }
