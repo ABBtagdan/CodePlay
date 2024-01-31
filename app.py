@@ -62,7 +62,7 @@ def symbol(id):
 
 @app.route("/recording", methods=["POST"])
 def recording():
-    file = request.files
+    file = request
     print(file)
     return Response(status=200)
 
