@@ -1,5 +1,6 @@
 // Olle Ö
 
+// Makes it posible to record audio
 navigator.mediaDevices.getUserMedia({ audio: true })
     .then(stream => { handlerFunction(stream) })
 
@@ -20,6 +21,7 @@ function handlerFunction (stream) {
 }
 
 function sendData (data) { }
+// To start the recording and stops after 4 recordings
 record.onclick = e => {
     record.disabled = true
     satisfied.disabled = true
@@ -46,10 +48,12 @@ record.onclick = e => {
     }, 1000)
 }
 
+// Plays back the sound you just recorded
 listen.onclick = e => {
     recordedAudio.play()
 }
 
+// Sends of the finished recording to the server
 satisfied.onclick = e => {
     makeRec(recordedAudio.src)
     fetch(blob,

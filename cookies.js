@@ -1,5 +1,6 @@
 // Olle Ö
 
+// Makes a new value in cookie
 function setCookie (cname, cvalue, exdays) {
     const d = new Date()
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000))
@@ -7,6 +8,7 @@ function setCookie (cname, cvalue, exdays) {
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/"
 }
 
+// Serches after value in cookie
 function getCookie (cname) {
     let name = cname + "="
     let ca = document.cookie.split(';')
@@ -22,6 +24,7 @@ function getCookie (cname) {
     return ""
 }
 
+// Checks for existing cookie
 function checkCookie () {
     let user = getCookie("username")
     if (user != "") {
@@ -34,11 +37,11 @@ function checkCookie () {
     }
 }
 
+// Saves recordings as a value in cookie
 function makeRec (cvalue) {
-    let ca = document.cookie.split(';')
+    let ca = document.cookie
     for (let i = 0; i < ca.length; i++) {
-        let c = ca[i]
-        if (('rec' + i + '=') in c) {
+        if (('rec' + i + '=') in ca) {
             continue
         }
         else {
