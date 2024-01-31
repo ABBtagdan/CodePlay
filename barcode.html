@@ -58,6 +58,7 @@
         #piano,
         #drums,
         #captureBtn,
+        #bubble,
         #retakeBtn,
         #saveBtn,
         #playBtn {
@@ -80,6 +81,7 @@
         /* Styling for other buttons */
         #piano,
         #drums,
+        #bubble,
         #retakeBtn,
         #saveBtn,
         #playBtn {
@@ -88,12 +90,14 @@
 
         /* Styling for the Piano and Drums buttons */
         #piano,
-        #drums {
+        #drums,
+        #bubble {
             color: #333;
         }
 
         /* Styling for the Piano and Drums buttons on light background */
         #piano,
+        #bubble,
         #drums {
             background-color: white;
             border: #333;
@@ -173,6 +177,8 @@
         <button id="piano">PIANO</button>
         <!-- Button to select the Drums instrument -->
         <button id="drums">DRUMS</button>
+        <!--The button to add costumized sounds-->
+        <button id="bubble">BUBBLE</button>
         <!-- Button to save the captured image -->
         <button id="saveBtn">Create Song</button>
         <!-- Button to play the created song -->
@@ -214,6 +220,7 @@
             const playBtn = document.getElementById('playBtn');
             const piano = document.getElementById("piano");
             const drums = document.getElementById("drums");
+            const bubble = document.getElementById("bubble");
 
             // Event listener for the Piano button
             piano.addEventListener("click", () => {
@@ -228,6 +235,13 @@
                 fetch('https://3c46-16-171-29-166.ngrok-free.app/instrument', {
                     method: 'POST',
                     body: "Drums"
+                })
+            })
+
+            bubble.addEventListener("click", () => {
+                fetch('https://3c46-16-171-29-166.ngrok-free.app/instrument', {
+                    method: 'POST',
+                    body: "Bubble"
                 })
             })
 
@@ -315,6 +329,7 @@
                 saveBtn.style.display = 'block';
                 piano.style.display = "block";
                 drums.style.display = "block";
+                bubble.style.display = "block";
 
                 // Update instructions text
                 instructions.textContent = "Are you pleased with the image? If yes, click the 'Create Song' button. If not, then click the 'Retake Image' button.";
@@ -332,7 +347,7 @@
                 const img = croppedImage;
 
                // Fetch the image data from the cropped image element's source
-    fetch(img.src)
+fetch(img.src)
     // Convert the response to a blob (binary large object)
     .then(res => res.blob())
     // Handle the blob data
@@ -382,7 +397,7 @@
                 displayOutput("ERROR: Couldn't reach the server!");
             });
     });
-
+            });
 
             // Function to crop the image based on the specified rectangle
             function cropImage(imageData, cropRect) {
