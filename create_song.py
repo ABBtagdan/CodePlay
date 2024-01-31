@@ -6,7 +6,7 @@ import os
 soundrange = {"doo": (3750, 4000), "ree": (3000, 3250), "mii": (2000, 2250), "faa": (1000, 1250), "sol": (0,250)}
 
 def concat_sound(sound_list, instrument, ip):
-    if instrument == "Recording":
+    if instrument == "Bubble":
         uncut_audio = AudioSegment.from_mp3(f"./sounds/{ip}.{instrument}.mp3")
     else:
         uncut_audio = AudioSegment.from_mp3(f"./sounds/{instrument}.mp3")
