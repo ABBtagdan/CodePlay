@@ -48,6 +48,10 @@ def image():
     rsp.headers.add("Expires", "0")
     return rsp
 
+@app.route("/symbols/<id>")
+def symbol(id):
+    return send_file("./symbols/"+id)
+
 @app.route("/instrument", methods=['POST'])
 def instrument():
     global inst
