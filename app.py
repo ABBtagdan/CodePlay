@@ -51,7 +51,7 @@ def image():
     if seq[0] not in ["0", "1", "2", "3", "4"]:
         return Response("ERROR: "+seq, status=200, content_type="text/plain")
     sound_path_list = handleInput(seq)
-    sound_path_list = concat_sound(sound_path_list, inst)
+    sound_path_list = concat_sound(sound_path_list, inst, request.remote_addr)
     rsp = Response(json.dumps(sound_path_list), status=200, content_type="text/plain")
     rsp.headers.add("Expires", "0")
     return rsp
@@ -62,8 +62,10 @@ def symbol(id):
 
 @app.route("/recording", methods=["POST"])
 def recording():
-    file = request.files
+    file = request.data
     print(file)
+    # with open(f"./sounds/{request.remote_addr}.Bubble.mp3") as f:
+    #     f.write()
     return Response(status=200)
 
 @app.route("/instrument", methods=['POST'])

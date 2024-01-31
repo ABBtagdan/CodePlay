@@ -222,6 +222,7 @@
             const drums = document.getElementById("drums");
             const bubble = document.getElementById("bubble");
 
+
             // Event listener for the Piano button
             piano.addEventListener("click", () => {
                 fetch('https://3c46-16-171-29-166.ngrok-free.app/instrument', {
@@ -395,7 +396,7 @@ fetch(img.src)
             .catch(error => {
                 console.error('Error:', error);
                 displayOutput("ERROR: Couldn't reach the server!");
-            });
+            })});
     });
             });
 
@@ -438,6 +439,7 @@ fetch(img.src)
                 outputDiv.textContent = message;
             }
         });
+
         </script>
     </body>
 </html>
