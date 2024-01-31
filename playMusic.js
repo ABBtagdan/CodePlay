@@ -1,7 +1,5 @@
 // Olle Ö
 
-let i = 0
-
 let aud = document.getElementById('audio')
 
 let musicList = []
@@ -16,7 +14,7 @@ function play () {
     aud.pause()
     aud.src = ""
     aud.load()
-    aud.src = musicList[i] + '.mp3'
+    aud.src = musicList[0] + '.mp3'
     aud.load()
     aud.play()
     // console.log("playing "+musicList[i]+".mp3")
