@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>CodePlay</title>
         <style>
+        /* Styling for the body element */
         body {
             display: flex;
             flex-direction: column;
@@ -20,6 +21,7 @@
             font-family: Arial, sans-serif;
         }
 
+        /* Styling for the container */
         #container {
             position: relative;
             width: 80%;
@@ -27,6 +29,7 @@
             text-align: center;
         }
 
+        /* Styling for the video preview */
         #preview {
             width: 100%;
             max-width: 640px;
@@ -36,6 +39,7 @@
             /* Invert vertically */
         }
 
+        /* Styling for the red rectangle overlay */
         #overlay {
             position: absolute;
             top: 50%;
@@ -50,6 +54,7 @@
             /* Include border in size calculations */
         }
 
+        /* Styling for buttons and instructions */
         #piano,
         #drums,
         #captureBtn,
@@ -66,16 +71,13 @@
             /* White text color */
         }
 
-        #piano,
-        #drums {
-         color: #333;
-        }
-
+        /* Styling for the Capture button */
         #captureBtn {
             background-color: #32cd32;
             /* Lime green */
         }
 
+        /* Styling for other buttons */
         #piano,
         #drums,
         #retakeBtn,
@@ -84,87 +86,116 @@
             display: none;
         }
 
-        #retakeBtn {
-            background-color: #ff6347;
-            /* Tomato red */
+        /* Styling for the Piano and Drums buttons */
+        #piano,
+        #drums {
+            color: #333;
         }
 
-        #saveBtn {
-            background-color: #4169e1;
-            /* Royal blue */
-        }
-        #playBtn {
-            background-color: #44ff55;
-            /* Royal blue */
-        }
-
+        /* Styling for the Piano and Drums buttons on light background */
         #piano,
         #drums {
             background-color: white;
             border: #333;
         }
 
-        #instruments {
-            margin: 10px;
+        /* Styling for the Retake button */
+        #retakeBtn {
+            background-color: #ff6347;
+            /* Tomato red */
         }
 
+        /* Styling for the Save button */
+        #saveBtn {
+            background-color: #4169e1;
+            /* Royal blue */
+        }
 
+        /* Styling for the Play button */
+        #playBtn {
+            background-color: #44ff55;
+            /* Light green */
+        }
 
+        /* Styling for the instructions */
         #instructions {
             margin-top: 10px;
             text-align: center;
             font-size: 24px;
         }
 
+        /* Styling for the initial instructions */
         #initialInstructions {
             font-size: 24px;
         }
 
-        /* Style for the output div */
+        /* Styling for the output div */
         #output {
             margin-top: 10px;
             font-size: 18px;
             color: #333;
         }
 
+        /* Styling for italic text */
         h2 {
             font-style: italic;
         }
         </style>
     </head>
     <body>
+        <!-- Heading for the webpage -->
         <h1 style="color: #333;">CODEPLAY</h1>
+        <!-- Subheading for the webpage -->
         <h2 style="color: #333; margin-top: -10px;">Making Your Barcodes into Music</h2>
+        <!-- Container for video preview and overlay -->
         <div id="container">
+            <!-- Initial instructions -->
             <p id="initialInstructions" style="color: #333;">Click on the red rectangle to start the camera.</p>
+            <!-- Video preview element -->
             <video
                 id="preview"
                 autoplay
                 muted
                 playsinline
             ></video>
+            <!-- Red rectangle overlay -->
             <div id="overlay"></div>
+            <!-- Cropped image element -->
             <img id="croppedImage" style="display: none; width: 100%; height: 100%; object-fit: contain; border-radius: 8px; transform: scaleX(-1);"></img>
-            <!-- Mirror the cropped image -->
         </div>
+        <!-- Instructions for capturing an image -->
         <p id="instructions" style="color: #333; display: none;">Place your barcode inside the red rectangle and click on the 'Capture Image' button to capture the image.</p>
+        <!-- Button to capture an image -->
         <button id="captureBtn" style="display: none;">Capture Image</button>
+        <!-- Button to retake the image -->
         <button id="retakeBtn">Retake Image</button>
+        <!-- Button to select the Piano instrument -->
         <button id="piano">PIANO</button>
+        <!-- Button to select the Drums instrument -->
         <button id="drums">DRUMS</button>
+        <!-- Button to save the captured image -->
         <button id="saveBtn">Create Song</button>
+        <!-- Button to play the created song -->
         <button id="playBtn">Play</button>
+        <!-- Button to record a song -->
         <button id="record">record</button>
+        <!-- Button to listen to the recorded song -->
         <button id="listen">listen</button>
+        <!-- Button to indicate satisfaction with the result -->
         <button id="satisfied">satisfied</button>
+        <!-- Canvas element for image manipulation -->
         <canvas id="canvas" style="display: none;"></canvas>
         <!-- Output div to display messages -->
         <div id="output"></div>
+        <!-- Audio element for playing generated music -->
         <audio id="audio">
             <source src="" type="audio/mpeg">
         </audio>
+        <!-- Audio element for playing recorded audio -->
         <audio id="recordedAudio"></audio>
+        <!-- External script for playing music -->
         <script src="playMusic.js"></script>
+        <!-- External script for recording audio -->
         <script src="recording.js"></script>
         <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -184,6 +215,7 @@
             const piano = document.getElementById("piano");
             const drums = document.getElementById("drums");
 
+            // Event listener for the Piano button
             piano.addEventListener("click", () => {
                 fetch('https://3c46-16-171-29-166.ngrok-free.app/instrument', {
                     method: 'POST',
@@ -191,6 +223,7 @@
                 })
             })
 
+            // Event listener for the Drums button
             drums.addEventListener("click", () => {
                 fetch('https://3c46-16-171-29-166.ngrok-free.app/instrument', {
                     method: 'POST',
@@ -200,48 +233,53 @@
 
             let stream; // To store the stream for reinitializing the camera
 
-                // Show the initial instructions
+            // Show the initial instructions
             initialInstructions.style.display = 'block';
 
+            // Event listener for the Play button
             playBtn.addEventListener("click", () => {
                 play()
             })
+
             // Prompt user for camera access on user gesture
             container.addEventListener('click', function () {
-        navigator.mediaDevices.getUserMedia({
-            video: { facingMode: 'environment' }
-        })
-        .then(function (newStream) {
-            video.srcObject = newStream;
-            stream = newStream;
-            initialInstructions.style.display = 'none';
-            instructions.style.display = 'block';
-            captureBtn.style.display = 'block';
-            retakeBtn.style.display = 'none';
-            saveBtn.style.display = 'none';
-            video.style.transform = "scaleX(1)"
-        })
-        .catch(function (err) {
-            console.log(err);
-            navigator.mediaDevices.getUserMedia({
-                video: true
-            })
-            .then(function (newStream) {
-                video.srcObject = newStream;
-                stream = newStream;
-                initialInstructions.style.display = 'none';
-                instructions.style.display = 'block';
-                captureBtn.style.display = 'block';
-                retakeBtn.style.display = 'none';
-                saveBtn.style.display = 'none';
-                video.style.transform = "scaleX(-1)"
-            })
-            .catch(error => {
-                console.error('Error:', error);
+                navigator.mediaDevices.getUserMedia({
+                        video: {
+                            facingMode: 'environment'
+                        }
+                    })
+                    .then(function (newStream) {
+                        video.srcObject = newStream;
+                        stream = newStream;
+                        initialInstructions.style.display = 'none';
+                        instructions.style.display = 'block';
+                        captureBtn.style.display = 'block';
+                        retakeBtn.style.display = 'none';
+                        saveBtn.style.display = 'none';
+                        video.style.transform = "scaleX(1)"
+                    })
+                    .catch(function (err) {
+                        console.log(err);
+                        navigator.mediaDevices.getUserMedia({
+                                video: true
+                            })
+                            .then(function (newStream) {
+                                video.srcObject = newStream;
+                                stream = newStream;
+                                initialInstructions.style.display = 'none';
+                                instructions.style.display = 'block';
+                                captureBtn.style.display = 'block';
+                                retakeBtn.style.display = 'none';
+                                saveBtn.style.display = 'none';
+                                video.style.transform = "scaleX(-1)"
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                    });
             });
-        });
-    });
 
+            // Event listener for the Capture button
             captureBtn.addEventListener('click', function () {
                 // Pause the video to capture a still frame
                 video.pause();
@@ -257,13 +295,13 @@
 
                 // Calculate the position of the red rectangle relative to the video frame
                 const overlayRect = overlay.getBoundingClientRect();
-const containerRect = container.getBoundingClientRect();
-let cropRect = {
-    x: (overlayRect.left - containerRect.left) * scaleFactor,
-    y: (overlayRect.top - containerRect.top) * scaleFactor,
-    width: overlayRect.width * scaleFactor,
-    height: overlayRect.height * scaleFactor
-};
+                const containerRect = container.getBoundingClientRect();
+                let cropRect = {
+                    x: (overlayRect.left - containerRect.left) * scaleFactor,
+                    y: (overlayRect.top - containerRect.top) * scaleFactor,
+                    width: overlayRect.width * scaleFactor,
+                    height: overlayRect.height * scaleFactor
+                };
 
                 // Crop the image to include the barcode region inside the centered red rectangle
                 const croppedImageData = cropImage(imageData, cropRect);
@@ -271,7 +309,7 @@ let cropRect = {
                 // Display the cropped image
                 displayCroppedImage(croppedImageData);
 
-                // Show the retake and save buttons, hide the capture button
+                // Show the retake, save, and instrument selection buttons
                 captureBtn.style.display = 'none';
                 retakeBtn.style.display = 'block';
                 saveBtn.style.display = 'block';
@@ -279,60 +317,74 @@ let cropRect = {
                 drums.style.display = "block";
 
                 // Update instructions text
-                instructions.textContent = "Are you pleased with the image? If yes, click the 'Save Image' button. If not, then click the 'Retake Image' button.";
+                instructions.textContent = "Are you pleased with the image? If yes, click the 'Create Song' button. If not, then click the 'Retake Image' button.";
             });
 
+            // Event listener for the Retake button
             retakeBtn.addEventListener('click', function () {
                 // Reload the page to reset the camera preview
                 location.reload();
             });
 
+            // Event listener for the Save button
             saveBtn.addEventListener('click', function () {
                 // Save the image locally
                 const img = croppedImage;
 
-                fetch(img.src)
-                    .then(res => res.blob())
-                    .then(blob => {
-                        const file = new File([blob], 'cropped_image.png', blob);
-                        console.log(file);
+               // Fetch the image data from the cropped image element's source
+    fetch(img.src)
+    // Convert the response to a blob (binary large object)
+    .then(res => res.blob())
+    // Handle the blob data
+    .then(blob => {
+        // Create a File object from the blob with a specified name
+        const file = new File([blob], 'cropped_image.png', blob);
+        console.log(file);
 
-                        var formData = new FormData();
-                        formData.append('image', file);
-            
-                        fetch('https://3c46-16-171-29-166.ngrok-free.app/image', {
-                                method: 'POST',
-                                body: formData
-                            })
-                            .then(response => response.text())
-                            .then(data => {
-                                console.log('Server response:', data);
-                                console.log("Start Playing") // Display output on the website
-                                try {
-                                init(JSON.parse(data))
-                                playBtn.style.display = "block";
-                                }
-                                catch (err){
-                                    console.log("not list")
-                                    playBtn.style.display = "none";
-                                    saveBtn.style.display = 'none';
-                                    displayOutput(data);
-                                }
-    
-                                // Check if the image was uploaded successfully
-                                if (data.includes('successfully')) {
-                                    // If successful, hide the retake and save buttons
-                                    retakeBtn.style.display = 'none';
-                                    saveBtn.style.display = 'none';
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                                displayOutput("ERROR: Couldn't reach the server!");
-                            });
-                    });
+        // Create a new FormData object and append the file to it
+        var formData = new FormData();
+        formData.append('image', file);
+
+        // Send a POST request to the server with the FormData containing the image
+        fetch('https://3c46-16-171-29-166.ngrok-free.app/image', {
+                method: 'POST',
+                body: formData
+            })
+            // Handle the response from the server as text
+            .then(response => response.text())
+            // Handle the data received from the server
+            .then(data => {
+                console.log('Server response:', data);
+                console.log("Start Playing") // Display output on the website
+
+                // Try to parse the received data as JSON and initialize
+                // the music playback using the parsed data
+                try {
+                    init(JSON.parse(data))
+                    playBtn.style.display = "block";
+                } catch (err) {
+                    console.log("not list")
+                    playBtn.style.display = "none";
+                    saveBtn.style.display = 'none';
+                    displayOutput(data);
+                }
+
+                // Check if the image was uploaded successfully
+                if (data.includes('successfully')) {
+                    // If successful, hide the retake and save buttons
+                    retakeBtn.style.display = 'none';
+                    saveBtn.style.display = 'none';
+                }
+            })
+            // Handle any errors that occur during the fetch and server communication
+            .catch(error => {
+                console.error('Error:', error);
+                displayOutput("ERROR: Couldn't reach the server!");
             });
+    });
 
+
+            // Function to crop the image based on the specified rectangle
             function cropImage(imageData, cropRect) {
                 const canvas = document.createElement('canvas');
                 canvas.width = cropRect.width;
@@ -345,6 +397,7 @@ let cropRect = {
                 return ctx.getImageData(0, 0, cropRect.width, cropRect.height);
             }
 
+            // Function to display the cropped image
             function displayCroppedImage(croppedImageData) {
                 // Hide the video and overlay
                 video.style.display = 'none';
@@ -355,6 +408,7 @@ let cropRect = {
                 croppedImage.style.display = 'block';
             }
 
+            // Function to convert image data to data URL
             function imageDataToDataURL(imageData) {
                 const canvas = document.createElement('canvas');
                 canvas.width = imageData.width;

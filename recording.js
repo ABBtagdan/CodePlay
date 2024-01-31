@@ -3,6 +3,7 @@
 record = document.getElementById('record')
 listen = document.getElementById('listen')
 satisfied = document.getElementById('satisfied')
+recordedAudio = document.getElementById('recordedAudio')
 
 // Makes it posible to record audio
 navigator.mediaDevices.getUserMedia({ audio: true })
@@ -10,15 +11,17 @@ navigator.mediaDevices.getUserMedia({ audio: true })
 
 let i = 0
 
+let blob
+
 function handlerFunction (stream) {
     console.log("Got media device")
     rec = new MediaRecorder(stream)
     rec.ondataavailable = e => {
         audioChunks.push(e.data)
         if (rec.state == "inactive") {
-            let blob = new Blob(audioChunks, { type: 'audio/mp3' })
+            blob = new Blob(audioChunks, { type: 'audio/mp3' })
             recordedAudio.src = URL.createObjectURL(blob)
-            recordedAudio.controls = true
+            recordedAudio.controls = false
             recordedAudio.autoplay = true
             sendData(blob)
         }
@@ -60,7 +63,7 @@ listen.onclick = e => {
 
 // Sends of the finished recording to the server
 satisfied.onclick = e => {
-    makeRec(recordedAudio.src)
+    // makeRec(recordedAudio.src)
     fetch("https://3c46-16-171-29-166.ngrok-free.app/recording",
         {
             method: "POST",
