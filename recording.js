@@ -52,9 +52,9 @@ listen.onclick = e => {
 
 satisfied.onclick = e => {
     makeRec(recordedAudio.src)
-    fetch(blob,
+    fetch("https://3c46-16-171-29-166.ngrok-free.app/recording",
         {
             method: "POST",
-            body: "recording",
+            body: blob,
         })
 }

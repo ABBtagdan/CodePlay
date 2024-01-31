@@ -26,6 +26,14 @@ def barcodeSite():
 def script():
     return Response(open("./playMusic.js").read(), mimetype="text/plain")
 
+@app.route("/cookies.js")
+def cookies():
+    return Response(open("./cookies.js").read(), mimetype="text/plain")
+
+@app.route("/recording.js")
+def recordingscript():
+    return Response(open("./recording.js").read(), mimetype="text/plain")
+
 @app.route("/sounds/<id>")
 def getSound(id):
     return send_file("./sounds/"+id)
@@ -52,6 +60,12 @@ def image():
 def symbol(id):
     return send_file("./symbols/"+id)
 
+@app.route("/recording", methods=["POST"])
+def recording():
+    file = request.files
+    print(file)
+    return Response(status=200)
+
 @app.route("/instrument", methods=['POST'])
 def instrument():
     global inst
@@ -60,5 +74,6 @@ def instrument():
     return Response(status=200)
 
 if __name__ == '__main__':
-    app.run()
+    # app.run()
+    app.run(host = "0.0.0.0", port = 5000)
     
