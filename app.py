@@ -71,7 +71,7 @@ def recording():
     inputfile = f"./sounds/{request.remote_addr}.Bubble.wav"
     outputfile = f"./sounds/{request.remote_addr}.Bubble.mp3"
 
-    audio = AudioSegment.from_wav(inputfile)
+    audio = AudioSegment.from_file(inputfile)
 
     audio.export(outputfile, format="mp3")
 
