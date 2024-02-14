@@ -9,7 +9,7 @@ from convertToSound import handleInput
 import json
 from flask import send_file
 from create_song import concat_sound
-
+from moviepy.editor import *
 
 PATH_TO_TEST_IMAGES_DIR = './images'
 
@@ -68,6 +68,15 @@ def recording():
     with open(f"./sounds/{request.remote_addr}.Bubble.mp3", "wb") as f:
         f.write(blob)
     
+    inputfile = f"./sounds/{request.remote_addr}.Bubble.mp3"
+    outputfile = f"./sounds/{request.remote_addr}.Bubble.mp3"
+
+    mpeg3_clip = AudioFileClip(inputfile)
+
+    mpeg3_clip.write_audiofile(outputfile)
+
+    mpeg3_clip.close()
+
     return Response(status=200)
 
 @app.route("/instrument", methods=['POST'])
