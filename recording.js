@@ -20,7 +20,7 @@ function handlerFunction(stream) {
   rec.ondataavailable = (e) => {
     audioChunks.push(e.data);
     if (rec.state == "inactive") {
-      blob = new Blob(audioChunks, { type: "audio/mpeg" });
+      blob = new Blob(audioChunks, { type: "audio/mpeg-3" });
       recordedAudio.src = URL.createObjectURL(blob);
       recordedAudio.controls = false;
       recordedAudio.autoplay = true;
@@ -63,14 +63,9 @@ listen.onclick = (e) => {
 // Sends of the finished recording to the server
 satisfied.onclick = (e) => {
   // makeRec(recordedAudio.src)
-  const file = new File([blob], "recording.mp3", blob);
-
-  // Create a new FormData object and append the file to it
-  var formData = new FormData();
-  formData.append("audio", file);
-
-  fetch("https://b862-13-48-25-29.ngrok-free.app//recording", {
-    method: "POST",
-    body: formData,
-  });
+  var xmlhttp = new XMLHttpRequest();
+  var url = "https://b862-13-48-25-29.ngrok-free.app//recording";
+  xmlhttp.open("POST", url, true);
+  xmlhttp.setRequestHeader("Content-type", "audio/mpeg-3");
+  xmlhttp.send(blob);
 };
