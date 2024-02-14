@@ -1,5 +1,6 @@
 // Olle Ö
 
+// Gets the audio tag that plays the music
 let aud = document.getElementById('audio')
 
 let musicList = []

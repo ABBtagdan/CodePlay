@@ -15,6 +15,7 @@ let i = 0
 
 let blob
 
+// Saves the recorded audio as a blob
 function handlerFunction (stream) {
     console.log("Got media device")
     rec = new MediaRecorder(stream)
