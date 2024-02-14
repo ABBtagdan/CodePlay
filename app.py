@@ -9,6 +9,7 @@ from convertToSound import handleInput
 import json
 from flask import send_file
 from create_song import concat_sound
+from pydub import AudioSegment
 
 PATH_TO_TEST_IMAGES_DIR = './images'
 
