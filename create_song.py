@@ -17,4 +17,4 @@ def concat_sound(sound_list, instrument, ip):
     if os.path.exists(f"./sounds/{ip}.temp.mp3"):
         os.remove(f"./sounds/{ip}.temp.mp3")
     export.export(f"./sounds/{ip}.temp.mp3")
-    return [f"./sounds/{ip}.temp.mp3"]
+    return [f"./sounds/{ip}.temp"]

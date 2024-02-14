@@ -62,10 +62,9 @@ def symbol(id):
 
 @app.route("/recording", methods=["POST"])
 def recording():
-    file = request.data
-    print(file)
-    # with open(f"./sounds/{request.remote_addr}.Bubble.mp3") as f:
-    #     f.write()
+    file = request.files["audio"]
+    filename = secure_filename(f"./sounds/{request.remote_addr}.Bubble.mp3")
+    file.save(filename)
     return Response(status=200)
 
 @app.route("/instrument", methods=['POST'])

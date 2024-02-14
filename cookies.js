@@ -24,28 +24,27 @@ function getCookie (cname) {
     return ""
 }
 
-// Checks for existing cookie
-function checkCookie () {
-    let user = getCookie("username")
-    if (user != "") {
-        alert("Welcome again " + user)
-    } else {
-        user = prompt("Please enter your name:", "")
-        if (user != "" && user != null) {
-            setCookie("username", user, 365)
-        }
+// Checks for existing cookie when starting the website
+let user = getCookie("username")
+if (user != "") {
+    console.log("Welcome again " + user)
+} else {
+    user = prompt("Please enter your name:", "")
+    if (user != "" && user != null) {
+        setCookie("username", user, 365)
     }
 }
 
-// Saves recordings as a value in cookie
+// Saves recordings as a value in cookie (not implemented)
 function makeRec (cvalue) {
     let ca = document.cookie
-    for (let i = 0; i < ca.length; i++) {
+    for (let i = 0; i < 5; i++) {
         if (('rec' + i + '=') in ca) {
             continue
         }
         else {
             setCookie(('rec' + i), cvalue, 30)
+            break
         }
     }
 }

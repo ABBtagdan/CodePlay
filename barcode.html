@@ -203,6 +203,8 @@
         <script src="playMusic.js"></script>
         <!-- External script for recording audio -->
         <script src="recording.js"></script>
+        <!-- Externalscript for handeling cookies -->
+        <script src="cookies.js"></script>
         <script>
         document.addEventListener("DOMContentLoaded", function () {
             const video = document.getElementById('preview');
@@ -221,11 +223,12 @@
             const piano = document.getElementById("piano");
             const drums = document.getElementById("drums");
             const bubble = document.getElementById("bubble");
+            const server = "https://b862-13-48-25-29.ngrok-free.app"
 
 
             // Event listener for the Piano button
             piano.addEventListener("click", () => {
-                fetch('https://3c46-16-171-29-166.ngrok-free.app/instrument', {
+                fetch(server+'/instrument', {
                     method: 'POST',
                     body: "Piano"
                 })
@@ -233,14 +236,14 @@
 
             // Event listener for the Drums button
             drums.addEventListener("click", () => {
-                fetch('https://3c46-16-171-29-166.ngrok-free.app/instrument', {
+                fetch(server+'/instrument', {
                     method: 'POST',
                     body: "Drums"
                 })
             })
 
             bubble.addEventListener("click", () => {
-                fetch('https://3c46-16-171-29-166.ngrok-free.app/instrument', {
+                fetch(server+'/instrument', {
                     method: 'POST',
                     body: "Bubble"
                 })
@@ -362,7 +365,7 @@ fetch(img.src)
         formData.append('image', file);
 
         // Send a POST request to the server with the FormData containing the image
-        fetch('https://3c46-16-171-29-166.ngrok-free.app/image', {
+        fetch(server+'/image', {
                 method: 'POST',
                 body: formData
             })
@@ -439,7 +442,6 @@ fetch(img.src)
                 outputDiv.textContent = message;
             }
         });
-
         </script>
     </body>
 </html>
