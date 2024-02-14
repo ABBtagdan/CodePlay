@@ -10,6 +10,7 @@ import json
 from flask import send_file
 from create_song import concat_sound
 
+
 PATH_TO_TEST_IMAGES_DIR = './images'
 
 app = Flask(__name__)
@@ -64,8 +65,9 @@ def symbol(id):
 @app.route("/recording", methods=["POST"])
 def recording():
     blob = request.data
-    with open("file.mp3", "wb") as f:
+    with open(f"./sounds/{request.remote_addr}.Bubble.mp3", "wb") as f:
         f.write(blob)
+    
     return Response(status=200)
 
 @app.route("/instrument", methods=['POST'])
