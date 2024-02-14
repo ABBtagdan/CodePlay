@@ -36,6 +36,7 @@ def recordingscript():
 
 @app.route("/sounds/<id>")
 def getSound(id):
+    print(id)
     return send_file("./sounds/"+id)
 
 # save the image as a picture
