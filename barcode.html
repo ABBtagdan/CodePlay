@@ -388,7 +388,7 @@ fetch(img.src)
                 try {
                     play()
                 } catch (err){
-                    displayOutput("couldn't play")
+                    displayOutput("couldn't play because error: "+error);
                 }
             })
             // Handle any errors that occur during the fetch and server communication
