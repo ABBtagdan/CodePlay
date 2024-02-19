@@ -381,10 +381,14 @@ fetch(img.src)
                 // the music playback using the parsed data
                 try {
                     init(JSON.parse(data))
-                    play()
                 } catch (err) {
                     console.log("not list")
-                    displayOutput(data);
+                    displayOutput("not list");
+                }
+                try {
+                    play()
+                } catch (err){
+                    displayOutput("couldn't play")
                 }
             })
             // Handle any errors that occur during the fetch and server communication
