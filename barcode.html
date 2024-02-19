@@ -217,7 +217,6 @@
             const retakeBtn = document.getElementsByClassName('retakeBtn')[0];
             const saveBtn = document.getElementsByClassName('saveBtn')[0];
             const croppedImage = document.getElementById('croppedImage');
-            const initialInstructions = document.getElementById('initialInstructions');
             const instructions = document.getElementsByClassName('instructions')[0];
             const outputDiv = document.getElementsByClassName('output')[0]; // Reference to the output div
             const playBtn = document.getElementById('playBtn');
@@ -261,7 +260,6 @@
             let stream; // To store the stream for reinitializing the camera
 
             // Show the initial instructions
-            initialInstructions.style.display = 'block';
 
             // Event listener for the Play button
             playBtn.addEventListener("click", () => {
@@ -278,7 +276,6 @@
                     .then(function (newStream) {
                         video.srcObject = newStream;
                         stream = newStream;
-                        initialInstructions.style.display = 'none';
                         instructions.style.display = 'block';
                         captureBtn.style.display = 'block';
                         retakeBtn.style.display = 'none';
@@ -293,7 +290,6 @@
                             .then(function (newStream) {
                                 video.srcObject = newStream;
                                 stream = newStream;
-                                initialInstructions.style.display = 'none';
                                 instructions.style.display = 'block';
                                 captureBtn.style.display = 'block';
                                 retakeBtn.style.display = 'none';
