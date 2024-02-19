@@ -45,7 +45,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             width: 50%;
-            aspect-ratio: 16/5;
+            height: 50%;
             border: 2px solid #48ACF0; /* Tomato red */
             pointer-events: none;
             box-shadow: 0 0 70px #02020a;
@@ -186,8 +186,9 @@
     <div id="parallelogram"></div>
     <h1 class="title" id="notpar">Codeplay <img class="codeicon" src="C:\Programmering\codeplay-projekt\symbols\CodeplayWHITE.png" alt="codeicon"></h1>
     <div class="container" id="notpar">
-        <video id="preview" autoplay muted playsinline></video>
-        <div id="overlay"></div>
+        <video id="preview" autoplay muted playsinline>
+            <div id="overlay"></div>
+        </video>
         <img id="croppedImage" style="display: none; width: 100%; height: 100%; object-fit: contain; border-radius: 8px; transform: scaleX(-1);"> <!-- Mirror the cropped image -->
     </div> 
     <p class="instructions" id="notpar">Click on the blue rectangle -- Place your barcode inside the blue rectangle and click on 'Capture' to capture the image.</p>
