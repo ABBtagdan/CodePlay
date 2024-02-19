@@ -399,7 +399,7 @@ fetch(img.src)
             // Handle any errors that occur during the fetch and server communication
             .catch(error => {
                 console.error('Error:', error);
-                displayOutput("ERROR: Couldn't reach the server!");
+                displayOutput("ERROR: "+error);
             })
     });
             });
