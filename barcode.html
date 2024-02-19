@@ -384,15 +384,7 @@ fetch(img.src)
                     play()
                 } catch (err) {
                     console.log("not list")
-                    saveBtn.style.display = 'none';
                     displayOutput(data);
-                }
-
-                // Check if the image was uploaded successfully
-                if (data.includes('successfully')) {
-                    // If successful, hide the retake and save buttons
-                    retakeBtn.style.display = 'none';
-                    saveBtn.style.display = 'none';
                 }
             })
             // Handle any errors that occur during the fetch and server communication
