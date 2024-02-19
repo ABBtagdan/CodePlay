@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Barcode Image Cropper</title>
     <style>
+
         body {
             display: flex;
             flex-direction: column;
@@ -14,25 +15,27 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0; /* Light gray background */
-            color: #333; /* Dark text color */
+            background-color: #71af9c; /* Light gray background */
+            color: #FFF; /* Dark text color */
             font-family: Arial, sans-serif;
+            /* clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%); */
         }
 
-        #container {
+        .container {
             position: relative;
-            width: 80%;
-            max-height: 75vh;
-            max-width: 640px;
+            width: 41.66667%;
+            aspect-ratio: 2/1;
             text-align: center;
+            border-radius: 20%;
         }
 
         #preview {
             width: 100%;
-            max-width: 640px;
             height: 100%;
             border-radius: 8px;
             transform: scaleX(-1); /* Invert vertically */
+            background-color: #363d3a;
+            box-shadow: inset 0 0 10px #02020a;
         }
 
         #overlay {
@@ -41,80 +44,180 @@
             left: 50%;
             transform: translate(-50%, -50%);
             width: 50%;
-            height: 30%;
-            border: 2px solid #ff6347; /* Tomato red */
+            aspect-ratio: 16/5;
+            border: 2px solid #48ACF0; /* Tomato red */
             pointer-events: none;
+            box-shadow: 0 0 70px #02020a;
         }
-
-        #captureBtn, #retakeBtn, #saveBtn {
+        
+        .saveBtn, .retakeBtn {
             margin-top: 10px;
             padding: 10px;
+            border-radius: 5px;
+        }
+
+        .captureBtn, .retakeBtn, .saveBtn, #selectBtns {
+            padding: 1.5%;
             font-size: 16px;
             cursor: pointer;
             border: none;
-            border-radius: 5px;
             color: #fff; /* White text color */
+            box-shadow: 0 0.8vw 0px #3192d3, 0 1.3vw 1.28vh 0 rgba(0,0,0,0.2), 0 0.48vw 1.3vw 0 rgba(0,0,0,0.19); 
         }
 
-        #captureBtn {
-            background-color: #32cd32; /* Lime green */
+        .captureBtn:active, #selectBtns:active {
+            background-color: #3192d3;
+            translate: 0px 10px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+             
         }
 
-        #retakeBtn, #saveBtn {
+        #selectBtns {
+            background-color: #48ACF0; /* Blue */
+            border-radius: 100%;
+            width: 12.65%;
+            aspect-ratio: 1 / 1;
+            margin: 0% 2% 0% 2%;
+        }
+
+        .captureBtn {
+            background-color: #48ACF0; /* Blue */
+            border-radius: 100%;
+            width: 19.46%;
+            aspect-ratio : 1 / 1;
+            margin: 0% 5% 0% 5%;
+        }
+
+        .buttonDrawer {
+            margin-top: 1.5%;
+            width: 40%;
+            height: 16%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0% 20% 0% 20%;
+        }
+
+        .retakeBtn, .saveBtn {
             display: none;
         }
 
-        #retakeBtn {
+        .retakeBtn {
             background-color: #ff6347; /* Tomato red */
         }
 
-        #saveBtn {
-            background-color: #4169e1; /* Royal blue */
+        .saveBtn {
+            background-color: #48ACF0; /* Royal blue */
         }
 
-        #instructions {
+        .instructions {
             margin-top: 10px;
             text-align: center;
-            font-size: 18px;
+            font-size: 115%;
+            background-color: #5c6f68;
+            color: #FFF;
+            padding: 20px;
+            margin: 10px 30px 0px 30px;
+            border-radius: 30px;
+            box-shadow: 0 5px 0px #475a53, 0 14px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
         }
 
         /* Style for the output div */
-        #output {
+        .output {
             margin-top: 10px;
             font-size: 18px;
             color: #333;
         }
+
+        .title {
+            background-color: #5c6f68;
+            padding: 20px;
+            margin: 10px 30px 10px 30px;
+            width: 52vw;
+            height: 6.5vh; 
+            text-align: center;
+            border-radius: 60px;
+            font-size: xx-large;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 5px 0px #475a53, 0 14px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        }
+
+        .codeicon {
+            aspect-ratio : 1 / 1;
+            height: 75%;
+            margin: 0% 0% 0% 1%;
+        }
+
+        #capicon {
+            height: 80%;
+            width: auto;
+        }
+
+        #trumpeticon {
+            height: 75%;
+        }
+
+        .drawerIcon {
+            filter: invert(1);
+            width: 55%;
+            aspect-ratio: 1/1;
+        }
+
+        #parallelogram {
+            z-index: -500;
+            background-color: #A4F9C8;
+            height:100%;
+            width:100%;
+            position: absolute;
+            clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
+            
+        }
+
+        #notpar {
+            z-index: 500;
+        }
+
     </style>
 </head>
 <body>
-    <h1 style="color: #333;">Barcode Image Cropper</h1>
-    <div id="container">
+    <div id="parallelogram"></div>
+    <h1 class="title" id="notpar">Codeplay <img class="codeicon" src="C:\Programmering\codeplay-projekt\symbols\CodeplayWHITE.png" alt="codeicon"></h1>
+    <div class="container" id="notpar">
         <video id="preview" autoplay muted playsinline></video>
         <div id="overlay"></div>
         <img id="croppedImage" style="display: none; width: 100%; height: 100%; object-fit: contain; border-radius: 8px; transform: scaleX(-1);"> <!-- Mirror the cropped image -->
+    </div> 
+    <p class="instructions" id="notpar">Click on the blue rectangle -- Place your barcode inside the blue rectangle and click on 'Capture' to capture the image.</p>
+    <div class="buttonDrawer" id="notpar">
+        <button class="selectDrums" id="selectBtns" title="Drums"><img id="drumsicon" class="drawerIcon" src="C:\Programmering\codeplay-projekt\symbols\DrumsICON.png" alt="selectdrums"></button>
+        <button class="selectPiano" id="selectBtns" title="Piano"><img id="pianoicon" class="drawerIcon" src="C:\Programmering\codeplay-projekt\symbols\PianoICON.png" alt="selectpiano"></button>
+        <button class="captureBtn" title="Capture!"><img id="capicon" class="drawerIcon" src="C:\Programmering\codeplay-projekt\symbols\CaptureICON.png" alt="captureimage"></button>
+        <button class="selectTrumpet" id="selectBtns" title="Trumpet"><img id="trumpeticon" class="drawerIcon" src="C:\Programmering\codeplay-projekt\symbols\TrumpetICON.png" alt="selecttrumpet"></button>
+        <button class="selectSaved" id="selectBtns" title="Custom"><img id="savedicon" class="drawerIcon" src="C:\Programmering\codeplay-projekt\symbols\SavedICON.png" alt="selectsaved"></button>
     </div>
-    <p id="instructions" style="color: #333;">Click on the red rektangle -- Place your barcode inside the red rectangle and click on the 'Capture Image' button to capture the image.</p>
-    <button id="captureBtn">Capture Image</button>
-    <button id="retakeBtn">Retake Image</button>
-    <button id="saveBtn">Save Image</button>
-    <canvas id="canvas" style="display: none;"></canvas>
+    <button class="retakeBtn" id="notpar">Retake Image</button>
+    <button class="saveBtn" id="notpar">Save Image</button>
+    <canvas class="canvas" id="notpar" style="display: none;"></canvas>
 
     <!-- Output div to display messages -->
-    <div id="output"></div>
-
+    <div class="output" id="notpar"></div>
+ 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const video = document.getElementById('preview');
-            const container = document.getElementById('container');
+            const container = document.getElementByClassName('container');
             const overlay = document.getElementById('overlay');
-            const canvas = document.getElementById('canvas');
+            const canvas = document.getElementByClassName('canvas');
             const ctx = canvas.getContext('2d');
-            const captureBtn = document.getElementById('captureBtn');
-            const retakeBtn = document.getElementById('retakeBtn');
-            const saveBtn = document.getElementById('saveBtn');
+            const captureBtn = document.getElementByClassName('captureBtn');
+            const buttonDrawer = document.getElementByClassName('buttonDrawer')
+            const retakeBtn = document.getElementByClassName('retakeBtn');
+            const saveBtn = document.getElementByClassName('saveBtn');
             const croppedImage = document.getElementById('croppedImage');
-            const instructions = document.getElementById('instructions');
-            const outputDiv = document.getElementById('output'); // Reference to the output div
+            const instructions = document.getElementByClassName('instructions');
+            const outputDiv = document.getElementByClassName('output'); // Reference to the output div
 
             let stream; // To store the stream for reinitializing the camera
 
@@ -161,6 +264,7 @@
 
                 // Show the retake and save buttons, hide the capture button
                 captureBtn.style.display = 'none';
+                buttonDrawer.style.display = 'none';
                 retakeBtn.style.display = 'block';
                 saveBtn.style.display = 'block';
 
