@@ -384,7 +384,6 @@ fetch(img.src)
                     play()
                 } catch (err) {
                     console.log("not list")
-                    playBtn.style.display = "none";
                     saveBtn.style.display = 'none';
                     displayOutput(data);
                 }
@@ -399,7 +398,7 @@ fetch(img.src)
             // Handle any errors that occur during the fetch and server communication
             .catch(error => {
                 console.error('Error:', error);
-                displayOutput("ERROR: "+error);
+                displayOutput(error);
             })
     });
             });
