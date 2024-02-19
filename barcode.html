@@ -208,18 +208,18 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const video = document.getElementById('preview');
-            const container = document.getElementByClassName('container');
+            const container = document.getElementsByClassName('container')[0];
             const overlay = document.getElementById('overlay');
-            const canvas = document.getElementByClassName('canvas');
+            const canvas = document.getElementsByClassName('canvas')[0];
             const ctx = canvas.getContext('2d');
-            const captureBtn = document.getElementByClassName('captureBtn');
-            const buttonDrawer = document.getElementByClassName('buttonDrawer')
-            const retakeBtn = document.getElementByClassName('retakeBtn');
-            const saveBtn = document.getElementByClassName('saveBtn');
+            const captureBtn = document.getElementsByClassName('captureBtn')[0];
+            const buttonDrawer = document.getElementsByClassName('buttonDrawer')[0]
+            const retakeBtn = document.getElementsByClassName('retakeBtn')[0];
+            const saveBtn = document.getElementsByClassName('saveBtn')[0];
             const croppedImage = document.getElementById('croppedImage');
             const initialInstructions = document.getElementById('initialInstructions');
-            const instructions = document.getElementByClassName('instructions');
-            const outputDiv = document.getElementByClassName('output'); // Reference to the output div
+            const instructions = document.getElementsByClassName('instructions')[0];
+            const outputDiv = document.getElementsByClassName('output')[0]; // Reference to the output div
             const playBtn = document.getElementById('playBtn');
             const piano = document.getElementById("piano");
             const drums = document.getElementById("drums");
