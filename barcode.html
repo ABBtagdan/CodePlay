@@ -219,7 +219,6 @@
             const croppedImage = document.getElementById('croppedImage');
             const instructions = document.getElementsByClassName('instructions')[0];
             const outputDiv = document.getElementsByClassName('output')[0]; // Reference to the output div
-            const playBtn = document.getElementById('playBtn');
             const piano = document.getElementsByClassName("selectPiano")[0];
             const drums = document.getElementsByClassName("selectDrums")[0];
             const trumpet = document.getElementsByClassName("selectTrumpet")[0];
@@ -262,9 +261,6 @@
             // Show the initial instructions
 
             // Event listener for the Play button
-            playBtn.addEventListener("click", () => {
-                play()
-            })
 
             // Prompt user for camera access on user gesture
             container.addEventListener('click', function () {
@@ -386,7 +382,7 @@ fetch(img.src)
                 // the music playback using the parsed data
                 try {
                     init(JSON.parse(data))
-                    playBtn.style.display = "block";
+                    play()
                 } catch (err) {
                     console.log("not list")
                     playBtn.style.display = "none";
