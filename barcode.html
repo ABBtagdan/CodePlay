@@ -386,7 +386,7 @@ fetch(img.src)
                     init(JSON.parse(data))
                 } catch (err) {
                     console.log("not list")
-                    displayOutput("not list");
+                    displayOutput("not list or "+err);
                 }
                 try {
                     play()
@@ -396,7 +396,7 @@ fetch(img.src)
             })
             // Handle any errors that occur during the fetch and server communication
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Error: ', error);
                 displayOutput(error);
             })
     });
